@@ -38,7 +38,7 @@ export function RoomRow({ room, events, weekDays, onOpenEvent, onOpenRoom, onCre
           Ver sala
         </button>
       </div>
-      <div className="relative grid flex-1" style={{ gridTemplateColumns: "repeat(7, minmax(140px, 1fr))" }}>
+      <div className="relative grid flex-1" style={{ gridTemplateColumns: "repeat(7, minmax(0, 1fr))" }}>
         {cells.map((cell) =>
           cell.type === "event" ? (
             <EventPill key={cell.key} cell={cell} onOpen={onOpenEvent} />

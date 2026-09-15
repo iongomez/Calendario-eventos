@@ -22,10 +22,10 @@ export function WeekGrid({
   onCreateEvent,
 }: WeekGridProps) {
   return (
-    <div className="min-w-[1100px]">
+    <div>
       <div className="flex border-b border-slate-200 bg-slate-50">
         <div className="w-64 shrink-0 border-r border-slate-200" />
-        <div className="grid flex-1" style={{ gridTemplateColumns: "repeat(7, minmax(140px, 1fr))" }}>
+        <div className="grid flex-1" style={{ gridTemplateColumns: "repeat(7, minmax(0, 1fr))" }}>
           {dayAggregates.map((aggregate) => (
             <DayHeaderCell key={aggregate.date} aggregate={aggregate} />
           ))}

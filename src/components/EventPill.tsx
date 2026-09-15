@@ -21,7 +21,7 @@ export function EventPill({ cell, onOpen }: EventPillProps) {
       type="button"
       onClick={() => onOpen(event)}
       title={`${event.name} — ${event.promoter}`}
-      style={{ gridColumn: `${colStart + 1} / span ${colSpan}` }}
+      style={{ gridColumn: `${colStart} / span ${colSpan}` }}
       className={`group relative grid overflow-hidden border text-left transition-shadow hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 ${style.cardBg} ${style.cardBorder} ${
         !clippedStart ? "rounded-l-lg" : "rounded-l-none border-l-0"
       } ${!clippedEnd ? "rounded-r-lg" : "rounded-r-none"} ${

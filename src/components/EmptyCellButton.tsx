@@ -9,7 +9,7 @@ interface EmptyCellButtonProps {
 export function EmptyCellButton({ cell, onCreate }: EmptyCellButtonProps) {
   return (
     <div
-      style={{ gridColumn: `${cell.colStart + 1} / span 1` }}
+      style={{ gridColumn: `${cell.colStart} / span 1` }}
       className="group flex min-h-[92px] items-center justify-center border-r border-slate-100 last:border-r-0"
     >
       <button

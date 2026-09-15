@@ -50,7 +50,7 @@ export function RoomRow({ room, events, weekDays, onOpenEvent, onOpenRoom, onCre
           ) : (
             <div
               key={cell.key}
-              style={{ gridColumn: `${cell.colStart + 1} / span 1` }}
+              style={{ gridColumn: `${cell.colStart} / span 1` }}
               className="min-h-[92px] border-r border-slate-100 last:border-r-0"
             />
           ),

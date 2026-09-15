@@ -1,4 +1,4 @@
-import { BedDouble, Coffee, Soup, UtensilsCrossed } from "lucide-react";
+import { BedDouble, Coffee, Moon, UtensilsCrossed } from "lucide-react";
 
 interface CateringSummaryProps {
   breakfast: number;
@@ -30,7 +30,7 @@ export function CateringSummary({
   const items: Array<{ key: string; Icon: typeof Coffee; value: number }> = [
     { key: "breakfast", Icon: Coffee, value: breakfast },
     { key: "lunch", Icon: UtensilsCrossed, value: lunch },
-    { key: "dinner", Icon: Soup, value: dinner },
+    { key: "dinner", Icon: Moon, value: dinner },
   ];
 
   return (

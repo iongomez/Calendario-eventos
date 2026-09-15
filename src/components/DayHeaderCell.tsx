@@ -1,6 +1,6 @@
 import type { DayAggregate } from "../types";
 import { dayName, formatDayNumber, fromISODate, isToday } from "../utils/dateUtils";
-import { BedDouble, Coffee, Soup, Users, UtensilsCrossed } from "lucide-react";
+import { BedDouble, Coffee, Moon, Users, UtensilsCrossed } from "lucide-react";
 
 export function DayHeaderCell({ aggregate }: { aggregate: DayAggregate }) {
   const date = fromISODate(aggregate.date);
@@ -43,7 +43,7 @@ export function DayHeaderCell({ aggregate }: { aggregate: DayAggregate }) {
               {aggregate.lunch}
             </span>
             <span className="flex items-center gap-0.5">
-              <Soup size={14} />
+              <Moon size={14} />
               {aggregate.dinner}
             </span>
           </div>
@@ -67,7 +67,7 @@ export function DayHeaderCell({ aggregate }: { aggregate: DayAggregate }) {
               </span>
               <span className="flex items-center justify-between gap-3">
                 <span className="flex items-center gap-1.5">
-                  <Soup size={13} />
+                  <Moon size={13} />
                   Cena
                 </span>
                 <span className="font-semibold">{aggregate.dinner}</span>

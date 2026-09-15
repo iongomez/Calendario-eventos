@@ -1,13 +1,12 @@
 import type { DayAggregate } from "../types";
-import { CateringSummary } from "./CateringIcons";
 import { dayName, formatDayNumber, fromISODate, isToday } from "../utils/dateUtils";
-import { Users } from "lucide-react";
+import { BedDouble, Coffee, Soup, Users, UtensilsCrossed } from "lucide-react";
 
 export function DayHeaderCell({ aggregate }: { aggregate: DayAggregate }) {
   const date = fromISODate(aggregate.date);
   const today = isToday(date);
-  const hasActivity =
-    aggregate.breakfast + aggregate.lunch + aggregate.dinner + aggregate.overnight + aggregate.attendees > 0;
+  const hasCatering = aggregate.breakfast + aggregate.lunch + aggregate.dinner > 0;
+  const hasOvernight = aggregate.overnight > 0;
 
   return (
     <div className={`flex flex-col items-stretch gap-1.5 px-2 py-2 ${today ? "bg-emerald-50" : ""}`}>
@@ -23,19 +22,40 @@ export function DayHeaderCell({ aggregate }: { aggregate: DayAggregate }) {
           {formatDayNumber(date)}
         </span>
       </div>
-      {hasActivity && (
-        <div className="flex flex-col gap-1 rounded-md bg-slate-100 px-2 py-1.5 text-slate-700">
-          <CateringSummary
-            breakfast={aggregate.breakfast}
-            lunch={aggregate.lunch}
-            dinner={aggregate.dinner}
-            overnight={aggregate.overnight}
-            tone="aggregate"
-          />
-          <span className="flex items-center gap-1 text-xs font-medium">
-            <Users size={14} />
-            {aggregate.attendees} asistentes
-          </span>
+
+      {aggregate.attendees > 0 && (
+        <span className="flex items-center gap-1 text-xs font-medium text-slate-600">
+          <Users size={13} />
+          {aggregate.attendees} asistentes
+        </span>
+      )}
+
+      {hasCatering && (
+        <div className="flex flex-col gap-1 rounded-md bg-slate-100 px-2 py-1.5">
+          <p className="text-xs font-semibold text-slate-700">Restaurante</p>
+          <div className="flex items-center gap-2 text-xs text-slate-700">
+            <span className="flex items-center gap-0.5">
+              <Coffee size={14} />
+              {aggregate.breakfast}
+            </span>
+            <span className="flex items-center gap-0.5">
+              <UtensilsCrossed size={14} />
+              {aggregate.lunch}
+            </span>
+            <span className="flex items-center gap-0.5">
+              <Soup size={14} />
+              {aggregate.dinner}
+            </span>
+          </div>
+        </div>
+      )}
+
+      {hasOvernight && (
+        <div className="rounded-md bg-slate-100 px-2 py-1.5">
+          <p className="flex items-center gap-1.5 text-xs font-semibold text-slate-700">
+            <BedDouble size={14} />
+            Hotel: {aggregate.overnight}
+          </p>
         </div>
       )}
     </div>

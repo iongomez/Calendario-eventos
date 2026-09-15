@@ -10,14 +10,14 @@ export function DayHeaderCell({ aggregate }: { aggregate: DayAggregate }) {
     aggregate.breakfast + aggregate.lunch + aggregate.dinner + aggregate.overnight + aggregate.attendees > 0;
 
   return (
-    <div className="flex flex-col items-stretch gap-1.5 px-2 py-2">
+    <div className={`flex flex-col items-stretch gap-1.5 px-2 py-2 ${today ? "bg-emerald-50" : ""}`}>
       <div className="flex items-baseline justify-between">
-        <span className={`text-[11px] font-semibold tracking-wide ${today ? "text-blue-600" : "text-slate-500"}`}>
+        <span className={`text-[11px] font-semibold tracking-wide ${today ? "text-emerald-700" : "text-slate-500"}`}>
           {dayName(date)}
         </span>
         <span
           className={`flex h-6 w-6 items-center justify-center rounded-full text-sm font-semibold ${
-            today ? "bg-blue-600 text-white" : "text-slate-700"
+            today ? "bg-emerald-600 text-white" : "text-slate-700"
           }`}
         >
           {formatDayNumber(date)}

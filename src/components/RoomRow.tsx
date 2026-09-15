@@ -3,6 +3,7 @@ import { layoutRoomRow } from "../utils/eventLayout";
 import { EventPill } from "./EventPill";
 import { EmptyCellButton } from "./EmptyCellButton";
 import { Building2, Star } from "lucide-react";
+import { fromISODate, isToday } from "../utils/dateUtils";
 
 interface RoomRowProps {
   room: Room;
@@ -51,7 +52,9 @@ export function RoomRow({ room, events, weekDays, onOpenEvent, onOpenRoom, onCre
             <div
               key={cell.key}
               style={{ gridColumn: `${cell.colStart} / span 1`, gridRow: "1" }}
-              className="min-h-[92px] border-r border-slate-100 last:border-r-0"
+              className={`min-h-[92px] border-r border-slate-100 last:border-r-0 ${
+                isToday(fromISODate(cell.date)) ? "bg-emerald-50/60" : ""
+              }`}
             />
           ),
         )}

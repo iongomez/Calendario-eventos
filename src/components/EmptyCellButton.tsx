@@ -1,5 +1,6 @@
 import { Plus } from "lucide-react";
 import type { EmptyCell } from "../utils/eventLayout";
+import { fromISODate, isToday } from "../utils/dateUtils";
 
 interface EmptyCellButtonProps {
   cell: EmptyCell;
@@ -7,10 +8,13 @@ interface EmptyCellButtonProps {
 }
 
 export function EmptyCellButton({ cell, onCreate }: EmptyCellButtonProps) {
+  const today = isToday(fromISODate(cell.date));
   return (
     <div
       style={{ gridColumn: `${cell.colStart} / span 1`, gridRow: "1" }}
-      className="group flex min-h-[92px] items-center justify-center border-r border-slate-100 last:border-r-0"
+      className={`group flex min-h-[92px] items-center justify-center border-r border-slate-100 last:border-r-0 ${
+        today ? "bg-emerald-50/60" : ""
+      }`}
     >
       <button
         type="button"

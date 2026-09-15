@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Filter, MoreVertical, Search, Sparkles } from "lucide-react";
 import type { EventStatus, Site } from "../types";
 import { STATUS_ORDER, STATUS_STYLES } from "../utils/statusStyles";
+import { SelectChip } from "./SelectChip";
 
 export type SortBy = "name" | "capacity" | "type";
 
@@ -74,17 +75,13 @@ export function FiltersBar({
           )}
         </div>
 
-        <select
-          value={siteId}
-          onChange={(e) => onSiteChange(e.target.value)}
-          className="rounded-full border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 focus:outline-none"
-        >
+        <SelectChip value={siteId} onChange={(e) => onSiteChange(e.target.value)}>
           {sites.map((site) => (
             <option key={site.id} value={site.id}>
               {site.name}
             </option>
           ))}
-        </select>
+        </SelectChip>
 
         <button
           type="button"
@@ -106,18 +103,14 @@ export function FiltersBar({
           ☆ Espacio singular
         </button>
 
-        <select
-          value={status}
-          onChange={(e) => onStatusChange(e.target.value as EventStatus | "todos")}
-          className="rounded-full border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 focus:outline-none"
-        >
+        <SelectChip value={status} onChange={(e) => onStatusChange(e.target.value as EventStatus | "todos")}>
           <option value="todos">Estado</option>
           {STATUS_ORDER.map((s) => (
             <option key={s} value={s}>
               {STATUS_STYLES[s].label}
             </option>
           ))}
-        </select>
+        </SelectChip>
       </div>
 
       <div className="flex items-center gap-2">

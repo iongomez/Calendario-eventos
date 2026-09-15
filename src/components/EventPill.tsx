@@ -29,6 +29,9 @@ export function EventPill({ cell, onOpen }: EventPillProps) {
       }`}
       data-testid={`event-pill-${event.id}`}
     >
+      {!clippedStart && (
+        <span aria-hidden="true" className={`absolute inset-y-0 left-0 z-10 w-1.5 ${style.tagBg}`} />
+      )}
       <div
         className="grid h-full"
         style={{ gridTemplateColumns: `repeat(${colSpan}, minmax(0,1fr))` }}

@@ -38,12 +38,15 @@ export function EventPill({ cell, onOpen }: EventPillProps) {
       >
         {dates.map((date, segmentIndex) => {
           const dayEntry = event.days.find((d) => d.date === date);
+          const isStripedSegment = segmentIndex === 0 && !clippedStart;
           return (
             <div
               key={date}
-              className={`flex min-h-[92px] flex-col gap-1 px-2 py-1.5 ${
-                segmentIndex > 0 ? "border-l border-black/10" : ""
-              } ${dayEntry?.isSetup ? "diagonal-stripes" : ""}`}
+              className={`flex min-h-[92px] flex-col gap-1 py-1.5 pr-2 ${
+                isStripedSegment ? "pl-3.5" : "pl-2"
+              } ${segmentIndex > 0 ? "border-l border-black/10" : ""} ${
+                dayEntry?.isSetup ? "diagonal-stripes" : ""
+              }`}
             >
               {dayEntry?.isSetup ? (
                 <span className="m-auto text-center text-[10px] font-medium text-slate-500">

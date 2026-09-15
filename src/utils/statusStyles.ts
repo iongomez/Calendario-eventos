@@ -21,7 +21,7 @@ export const STATUS_STYLES: Record<EventStatus, StatusStyle> = {
     textColor: "text-slate-900",
   },
   futuro: {
-    label: "Futuro",
+    label: "Planing",
     dot: "bg-blue-500",
     tagBg: "bg-blue-600",
     tagText: "text-white",

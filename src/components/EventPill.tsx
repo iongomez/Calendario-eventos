@@ -35,7 +35,6 @@ export function EventPill({ cell, onOpen }: EventPillProps) {
       >
         {dates.map((date, segmentIndex) => {
           const dayEntry = event.days.find((d) => d.date === date);
-          const isFirstSegment = segmentIndex === 0;
           return (
             <div
               key={date}
@@ -49,7 +48,7 @@ export function EventPill({ cell, onOpen }: EventPillProps) {
                 </span>
               ) : (
                 <>
-                  {isFirstSegment && <StatusBadge status={event.status} />}
+                  <StatusBadge status={event.status} />
                   <p
                     className={`text-xs font-semibold leading-tight ${style.textColor} ${
                       isAnulado ? "line-through decoration-2" : ""

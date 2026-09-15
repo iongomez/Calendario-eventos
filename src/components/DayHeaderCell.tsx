@@ -31,7 +31,7 @@ export function DayHeaderCell({ aggregate }: { aggregate: DayAggregate }) {
       )}
 
       {hasCatering && (
-        <div className="flex flex-col gap-1 rounded-md bg-slate-100 px-2 py-1.5">
+        <div className="flex flex-col gap-1 rounded-md border border-slate-300/70 bg-slate-200/70 px-2 py-1.5">
           <p className="text-xs font-semibold text-slate-700">Restaurante</p>
           <div className="flex items-center gap-2 text-xs text-slate-700">
             <span className="flex items-center gap-0.5">
@@ -51,7 +51,7 @@ export function DayHeaderCell({ aggregate }: { aggregate: DayAggregate }) {
       )}
 
       {hasOvernight && (
-        <div className="rounded-md bg-slate-100 px-2 py-1.5">
+        <div className="rounded-md border border-slate-300/70 bg-slate-200/70 px-2 py-1.5">
           <p className="flex items-center gap-1.5 text-xs font-semibold text-slate-700">
             <BedDouble size={14} />
             Hotel: {aggregate.overnight}

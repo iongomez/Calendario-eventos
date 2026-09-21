@@ -11,23 +11,19 @@ export function computeDayAggregates(
 ): DayAggregate[] {
   return weekDays.map((day) => {
     const iso = toISODate(day);
-    let breakfast = 0;
-    let lunch = 0;
-    let dinner = 0;
+    let catering = 0;
     let overnight = 0;
     let attendees = 0;
 
     for (const event of events) {
       const entry = event.days.find((d) => d.date === iso);
       if (entry && !entry.isSetup) {
-        breakfast += entry.breakfast;
-        lunch += entry.lunch;
-        dinner += entry.dinner;
+        catering += entry.catering;
         overnight += entry.overnight;
         attendees += entry.attendees;
       }
     }
 
-    return { date: iso, breakfast, lunch, dinner, overnight, attendees };
+    return { date: iso, catering, overnight, attendees };
   });
 }

@@ -1,8 +1,8 @@
 import type { CalendarEvent } from "../types";
-import { CateringSummary } from "./CateringIcons";
+import { CateringMetric } from "./CateringIcons";
 import { StatusBadge } from "./StatusBadge";
 import { STATUS_STYLES } from "../utils/statusStyles";
-import { Users } from "lucide-react";
+import { BedDouble, UtensilsCrossed, Users } from "lucide-react";
 import type { EventCell } from "../utils/eventLayout";
 
 interface EventPillProps {
@@ -69,14 +69,11 @@ export function EventPill({ cell, onOpen }: EventPillProps) {
                       {dayEntry.attendees}
                     </p>
                   )}
-                  {dayEntry && (
-                    <CateringSummary
-                      breakfast={dayEntry.breakfast}
-                      lunch={dayEntry.lunch}
-                      dinner={dayEntry.dinner}
-                      overnight={dayEntry.overnight}
-                      size="xs"
-                    />
+                  {dayEntry && dayEntry.catering > 0 && (
+                    <CateringMetric icon={UtensilsCrossed} label="Comidas" value={dayEntry.catering} size="xs" />
+                  )}
+                  {dayEntry && dayEntry.overnight > 0 && (
+                    <CateringMetric icon={BedDouble} label="Pernoctas" value={dayEntry.overnight} size="xs" />
                   )}
                 </>
               )}

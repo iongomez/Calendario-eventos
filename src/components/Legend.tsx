@@ -1,4 +1,4 @@
-import { BedDouble, Coffee, Moon, UtensilsCrossed } from "lucide-react";
+import { BedDouble, UtensilsCrossed } from "lucide-react";
 import { STATUS_ORDER, STATUS_STYLES } from "../utils/statusStyles";
 
 export function Legend() {
@@ -16,16 +16,10 @@ export function Legend() {
       </span>
       <span className="mx-1 h-4 border-l border-slate-200" />
       <span className="flex items-center gap-1">
-        <Coffee size={13} /> Desayuno
+        <UtensilsCrossed size={13} /> Comidas
       </span>
       <span className="flex items-center gap-1">
-        <UtensilsCrossed size={13} /> Comida
-      </span>
-      <span className="flex items-center gap-1">
-        <Moon size={13} /> Cena
-      </span>
-      <span className="flex items-center gap-1">
-        <BedDouble size={13} /> Pernocta
+        <BedDouble size={13} /> Pernoctas
       </span>
     </div>
   );

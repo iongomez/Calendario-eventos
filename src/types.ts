@@ -24,9 +24,10 @@ export interface Room {
 export interface DailyCatering {
   /** ISO date (yyyy-mm-dd) this catering/occupancy applies to */
   date: string;
-  breakfast: number;
-  lunch: number;
-  dinner: number;
+  /** Total restauración count for the day (Comidas) — sites may offer very different service
+   * types (café, agua ponentes, almuerzo...), so the calendar only tracks the combined total. */
+  catering: number;
+  /** Pernoctas (Hotel) */
   overnight: number;
   attendees: number;
   /** true if this date is a load-in/load-out day rather than the event itself */
@@ -52,9 +53,7 @@ export interface CalendarEvent {
 
 export interface DayAggregate {
   date: string;
-  breakfast: number;
-  lunch: number;
-  dinner: number;
+  catering: number;
   overnight: number;
   attendees: number;
 }

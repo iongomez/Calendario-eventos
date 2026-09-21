@@ -26,9 +26,7 @@ function deriveStatus(
 interface DaySpec {
   weekOffset: number;
   dayIndex: number;
-  breakfast?: number;
-  lunch?: number;
-  dinner?: number;
+  catering?: number;
   overnight?: number;
   attendees?: number;
   isSetup?: boolean;
@@ -37,9 +35,7 @@ interface DaySpec {
 function buildDays(specs: DaySpec[]): DailyCatering[] {
   return specs.map((s) => ({
     date: d(s.weekOffset, s.dayIndex),
-    breakfast: s.breakfast ?? 0,
-    lunch: s.lunch ?? 0,
-    dinner: s.dinner ?? 0,
+    catering: s.catering ?? 0,
     overnight: s.overnight ?? 0,
     attendees: s.attendees ?? 0,
     isSetup: s.isSetup ?? false,
@@ -163,8 +159,8 @@ export const EVENTS: CalendarEvent[] = [
     startTime: "09:00",
     endTime: "19:00",
     days: buildDays([
-      { weekOffset: 0, dayIndex: 1, breakfast: 100, lunch: 100, dinner: 100, overnight: 50, attendees: 100 },
-      { weekOffset: 0, dayIndex: 2, breakfast: 100, lunch: 100, dinner: 100, overnight: 50, attendees: 100 },
+      { weekOffset: 0, dayIndex: 1, catering: 300, overnight: 50, attendees: 100 },
+      { weekOffset: 0, dayIndex: 2, catering: 300, overnight: 50, attendees: 100 },
     ]),
   }),
 
@@ -179,8 +175,8 @@ export const EVENTS: CalendarEvent[] = [
     endTime: "20:00",
     days: buildDays([
       { weekOffset: 0, dayIndex: 0, isSetup: true },
-      { weekOffset: 0, dayIndex: 1, lunch: 60, dinner: 60, attendees: 60 },
-      { weekOffset: 0, dayIndex: 2, lunch: 60, dinner: 60, attendees: 60 },
+      { weekOffset: 0, dayIndex: 1, catering: 120, attendees: 60 },
+      { weekOffset: 0, dayIndex: 2, catering: 120, attendees: 60 },
       { weekOffset: 0, dayIndex: 3, isSetup: true },
     ]),
   }),
@@ -194,7 +190,7 @@ export const EVENTS: CalendarEvent[] = [
     managerEmail: "ana.perez@iberdrola.com",
     startTime: "08:00",
     endTime: "13:00",
-    days: buildDays([{ weekOffset: 0, dayIndex: 2, breakfast: 20, lunch: 20, attendees: 20 }]),
+    days: buildDays([{ weekOffset: 0, dayIndex: 2, catering: 40, attendees: 20 }]),
   }),
 
   // Caso: pre-reserva
@@ -207,7 +203,7 @@ export const EVENTS: CalendarEvent[] = [
     startTime: "09:30",
     endTime: "14:00",
     override: "pre-reserva",
-    days: buildDays([{ weekOffset: 0, dayIndex: 4, lunch: 30, attendees: 30 }]),
+    days: buildDays([{ weekOffset: 0, dayIndex: 4, catering: 30, attendees: 30 }]),
   }),
 
   // Caso: evento futuro (1 día, semana siguiente)
@@ -219,9 +215,7 @@ export const EVENTS: CalendarEvent[] = [
     managerEmail: CURRENT_USER_EMAIL,
     startTime: "09:00",
     endTime: "18:00",
-    days: buildDays([
-      { weekOffset: 1, dayIndex: 2, breakfast: 150, lunch: 150, dinner: 150, overnight: 180, attendees: 180 },
-    ]),
+    days: buildDays([{ weekOffset: 1, dayIndex: 2, catering: 450, overnight: 180, attendees: 180 }]),
   }),
 
   // Caso: evento futuro multi-día (semana siguiente), sin montaje/desmontaje
@@ -234,9 +228,9 @@ export const EVENTS: CalendarEvent[] = [
     startTime: "09:00",
     endTime: "18:30",
     days: buildDays([
-      { weekOffset: 1, dayIndex: 1, lunch: 45, dinner: 45, overnight: 40, attendees: 90 },
-      { weekOffset: 1, dayIndex: 2, lunch: 45, dinner: 45, overnight: 40, attendees: 90 },
-      { weekOffset: 1, dayIndex: 3, lunch: 45, dinner: 45, overnight: 40, attendees: 90 },
+      { weekOffset: 1, dayIndex: 1, catering: 90, overnight: 40, attendees: 90 },
+      { weekOffset: 1, dayIndex: 2, catering: 90, overnight: 40, attendees: 90 },
+      { weekOffset: 1, dayIndex: 3, catering: 90, overnight: 40, attendees: 90 },
     ]),
   }),
 
@@ -249,7 +243,7 @@ export const EVENTS: CalendarEvent[] = [
     managerEmail: CURRENT_USER_EMAIL,
     startTime: "11:00",
     endTime: "12:30",
-    days: buildDays([{ weekOffset: -1, dayIndex: 3, lunch: 15, attendees: 15 }]),
+    days: buildDays([{ weekOffset: -1, dayIndex: 3, catering: 15, attendees: 15 }]),
   }),
 
   // Caso: evento anulado
@@ -263,8 +257,8 @@ export const EVENTS: CalendarEvent[] = [
     endTime: "17:00",
     override: "anulado",
     days: buildDays([
-      { weekOffset: -1, dayIndex: 1, lunch: 40, attendees: 40 },
-      { weekOffset: -1, dayIndex: 2, lunch: 40, attendees: 40 },
+      { weekOffset: -1, dayIndex: 1, catering: 40, attendees: 40 },
+      { weekOffset: -1, dayIndex: 2, catering: 40, attendees: 40 },
     ]),
   }),
 
@@ -278,10 +272,10 @@ export const EVENTS: CalendarEvent[] = [
     startTime: "09:00",
     endTime: "17:00",
     days: buildDays([
-      { weekOffset: -1, dayIndex: 5, breakfast: 30, lunch: 30, dinner: 30, overnight: 30, attendees: 30 },
-      { weekOffset: -1, dayIndex: 6, breakfast: 30, lunch: 30, dinner: 30, overnight: 30, attendees: 30 },
-      { weekOffset: 0, dayIndex: 0, breakfast: 30, lunch: 30, dinner: 30, overnight: 30, attendees: 30 },
-      { weekOffset: 0, dayIndex: 1, breakfast: 30, lunch: 30, dinner: 30, overnight: 30, attendees: 30 },
+      { weekOffset: -1, dayIndex: 5, catering: 90, overnight: 30, attendees: 30 },
+      { weekOffset: -1, dayIndex: 6, catering: 90, overnight: 30, attendees: 30 },
+      { weekOffset: 0, dayIndex: 0, catering: 90, overnight: 30, attendees: 30 },
+      { weekOffset: 0, dayIndex: 1, catering: 90, overnight: 30, attendees: 30 },
     ]),
   }),
 
@@ -294,6 +288,6 @@ export const EVENTS: CalendarEvent[] = [
     managerEmail: CURRENT_USER_EMAIL,
     startTime: "10:00",
     endTime: "11:00",
-    days: buildDays([{ weekOffset: 0, dayIndex: 2, lunch: 10, attendees: 10 }]),
+    days: buildDays([{ weekOffset: 0, dayIndex: 2, catering: 10, attendees: 10 }]),
   }),
 ];

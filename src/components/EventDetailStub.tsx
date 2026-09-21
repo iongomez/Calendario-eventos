@@ -1,8 +1,9 @@
 import type { CalendarEvent, Room } from "../types";
 import { Modal } from "./Modal";
 import { StatusBadge } from "./StatusBadge";
-import { CateringSummary } from "./CateringIcons";
+import { CateringMetric } from "./CateringIcons";
 import { fromISODate } from "../utils/dateUtils";
+import { BedDouble, UtensilsCrossed } from "lucide-react";
 
 interface EventDetailStubProps {
   event: CalendarEvent;
@@ -44,13 +45,10 @@ export function EventDetailStub({ event, room, onClose }: EventDetailStubProps) 
                   {fromISODate(day.date).toLocaleDateString("es-ES", { weekday: "short", day: "2-digit", month: "short" })}
                   {day.isSetup && <span className="ml-1.5 text-slate-400">(montaje/desmontaje)</span>}
                 </span>
-                <CateringSummary
-                  breakfast={day.breakfast}
-                  lunch={day.lunch}
-                  dinner={day.dinner}
-                  overnight={day.overnight}
-                  tone="aggregate"
-                />
+                <span className="flex items-center gap-3">
+                  <CateringMetric icon={UtensilsCrossed} label="Comidas" value={day.catering} size="xs" />
+                  <CateringMetric icon={BedDouble} label="Pernoctas" value={day.overnight} size="xs" />
+                </span>
               </div>
             ))}
           </div>

@@ -1,54 +1,26 @@
-import { BedDouble, Coffee, Moon, UtensilsCrossed } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
-interface CateringSummaryProps {
-  breakfast: number;
-  lunch: number;
-  dinner: number;
-  overnight: number;
+interface CateringMetricProps {
+  icon: LucideIcon;
+  label: string;
+  value: number;
   size?: "sm" | "xs";
-  tone?: "event" | "aggregate";
 }
 
 /**
- * Same icon, same order, everywhere (event cards, day header, room list) —
- * keeps the "mismo orden de iconos" consistency requirement from the PRD.
- * A metric is only rendered when > 0, except in "aggregate" tone (day header),
- * where all metrics are always shown for a stable summary format.
+ * A single labelled restauración/alojamiento metric (icon + label + total),
+ * reused everywhere a "Comidas"/"Restaurante" or "Pernoctas"/"Hotel" figure
+ * appears — sites can offer very different catering services, so the
+ * calendar only ever shows the combined total, never a per-service split.
  */
-export function CateringSummary({
-  breakfast,
-  lunch,
-  dinner,
-  overnight,
-  size = "sm",
-  tone = "event",
-}: CateringSummaryProps) {
+export function CateringMetric({ icon: Icon, label, value, size = "sm" }: CateringMetricProps) {
   const iconSize = size === "xs" ? 12 : 14;
-  const textSize = size === "xs" ? "text-[10px]" : "text-xs";
-  const showAll = tone === "aggregate";
-
-  const items: Array<{ key: string; Icon: typeof Coffee; value: number }> = [
-    { key: "breakfast", Icon: Coffee, value: breakfast },
-    { key: "lunch", Icon: UtensilsCrossed, value: lunch },
-    { key: "dinner", Icon: Moon, value: dinner },
-  ];
+  const textSize = size === "xs" ? "text-[11px]" : "text-xs";
 
   return (
-    <div className={`flex items-center gap-2 ${textSize}`}>
-      {items.map(({ key, Icon, value }) =>
-        showAll || value > 0 ? (
-          <span key={key} className="flex items-center gap-0.5">
-            <Icon size={iconSize} strokeWidth={2} />
-            {value}
-          </span>
-        ) : null,
-      )}
-      {(showAll || overnight > 0) && (
-        <span className="flex items-center gap-0.5">
-          <BedDouble size={iconSize} strokeWidth={2} />
-          {overnight}
-        </span>
-      )}
-    </div>
+    <span className={`flex items-center gap-1 ${textSize} text-slate-700`}>
+      <Icon size={iconSize} strokeWidth={2} />
+      {label}: <span className="font-semibold">{value}</span>
+    </span>
   );
 }

@@ -1,6 +1,6 @@
 import type { DayAggregate } from "../types";
 import { dayName, formatDayNumber, fromISODate, isToday } from "../utils/dateUtils";
-import { BedDouble, UtensilsCrossed, Users } from "lucide-react";
+import { BedDouble, UtensilsCrossed } from "lucide-react";
 
 export function DayHeaderCell({ aggregate }: { aggregate: DayAggregate }) {
   const date = fromISODate(aggregate.date);
@@ -20,13 +20,6 @@ export function DayHeaderCell({ aggregate }: { aggregate: DayAggregate }) {
           {formatDayNumber(date)}
         </span>
       </div>
-
-      {aggregate.attendees > 0 && (
-        <span className="flex items-center gap-1 text-xs font-medium text-slate-600">
-          <Users size={13} />
-          {aggregate.attendees} asistentes
-        </span>
-      )}
 
       {aggregate.catering > 0 && <AggregateCard icon={UtensilsCrossed} label="Restaurante" value={aggregate.catering} />}
       {aggregate.overnight > 0 && <AggregateCard icon={BedDouble} label="Hotel" value={aggregate.overnight} />}

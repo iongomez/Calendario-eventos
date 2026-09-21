@@ -13,17 +13,15 @@ export function computeDayAggregates(
     const iso = toISODate(day);
     let catering = 0;
     let overnight = 0;
-    let attendees = 0;
 
     for (const event of events) {
       const entry = event.days.find((d) => d.date === iso);
       if (entry && !entry.isSetup) {
         catering += entry.catering;
         overnight += entry.overnight;
-        attendees += entry.attendees;
       }
     }
 
-    return { date: iso, catering, overnight, attendees };
+    return { date: iso, catering, overnight };
   });
 }

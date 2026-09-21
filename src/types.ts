@@ -55,5 +55,4 @@ export interface DayAggregate {
   date: string;
   catering: number;
   overnight: number;
-  attendees: number;
 }

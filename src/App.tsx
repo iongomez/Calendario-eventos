@@ -3,7 +3,7 @@ import { Sidebar } from "./components/Sidebar";
 import { TopBar } from "./components/TopBar";
 import { FiltersBar, type SortBy } from "./components/FiltersBar";
 import { WeekGrid } from "./components/WeekGrid";
-import { ListView } from "./components/ListView";
+import { CompactGrid } from "./components/CompactGrid";
 import { Legend } from "./components/Legend";
 import { EventDetailStub } from "./components/EventDetailStub";
 import { RoomDetailStub } from "./components/RoomDetailStub";
@@ -123,11 +123,18 @@ export default function App() {
               onCreateEvent={(roomId, date) => setCreateTarget({ roomId, date })}
             />
           ) : (
-            <ListView events={filteredEvents} roomsById={roomsById} onOpenEvent={setSelectedEvent} />
+            <CompactGrid
+              weekDays={weekDays}
+              rooms={filteredRooms}
+              eventsByRoom={eventsByRoom}
+              onOpenEvent={setSelectedEvent}
+              onOpenRoom={setSelectedRoom}
+              onCreateEvent={(roomId, date) => setCreateTarget({ roomId, date })}
+            />
           )}
         </div>
 
-        {viewMode === "grid" && <Legend />}
+        <Legend />
       </div>
 
       {selectedEvent && (

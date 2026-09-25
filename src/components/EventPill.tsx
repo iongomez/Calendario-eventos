@@ -38,19 +38,32 @@ export function EventPill({ cell, onOpen }: EventPillProps) {
       >
         {dates.map((date, segmentIndex) => {
           const dayEntry = event.days.find((d) => d.date === date);
-          const isStripedSegment = segmentIndex === 0 && !clippedStart;
+          const showsStatusStripe = segmentIndex === 0 && !clippedStart;
+          const isHalfDaySetup = dayEntry?.isSetup && dayEntry.setupDuration === "half";
+          const isFullDaySetup = dayEntry?.isSetup && dayEntry.setupDuration !== "half";
           return (
             <div
               key={date}
+              style={
+                isHalfDaySetup
+                  ? {
+                      backgroundImage: `repeating-linear-gradient(-45deg, rgba(${style.stripeRgb}, 0.22) 0px, rgba(${style.stripeRgb}, 0.22) 4px, transparent 4px, transparent 9px)`,
+                    }
+                  : undefined
+              }
               className={`flex min-h-[92px] flex-col gap-1 py-1.5 pr-2 ${
-                isStripedSegment ? "pl-3.5" : "pl-2"
-              } ${segmentIndex > 0 ? "border-l border-black/10" : ""} ${
-                dayEntry?.isSetup ? "diagonal-stripes" : ""
-              }`}
+                showsStatusStripe ? "pl-3.5" : "pl-2"
+              } ${segmentIndex > 0 ? "border-l border-black/10" : ""} ${isFullDaySetup ? "bg-white/55" : ""}`}
             >
               {dayEntry?.isSetup ? (
                 <span className="m-auto text-center text-[10px] font-medium text-slate-500">
                   {segmentIndex === 0 ? "Montaje" : "Desmontaje"}
+                  {isHalfDaySetup && (
+                    <>
+                      <br />
+                      medio día
+                    </>
+                  )}
                 </span>
               ) : (
                 <>

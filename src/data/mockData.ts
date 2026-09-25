@@ -30,6 +30,8 @@ interface DaySpec {
   overnight?: number;
   attendees?: number;
   isSetup?: boolean;
+  /** Only relevant when isSetup is true. Defaults to "full". */
+  setupDuration?: "full" | "half";
 }
 
 function buildDays(specs: DaySpec[]): DailyCatering[] {
@@ -39,6 +41,7 @@ function buildDays(specs: DaySpec[]): DailyCatering[] {
     overnight: s.overnight ?? 0,
     attendees: s.attendees ?? 0,
     isSetup: s.isSetup ?? false,
+    setupDuration: s.isSetup ? (s.setupDuration ?? "full") : undefined,
   }));
 }
 
@@ -218,7 +221,7 @@ export const EVENTS: CalendarEvent[] = [
     days: buildDays([{ weekOffset: 1, dayIndex: 2, catering: 450, overnight: 180, attendees: 180 }]),
   }),
 
-  // Caso: evento futuro multi-día (semana siguiente), sin montaje/desmontaje
+  // Caso: evento futuro multi-día (semana siguiente) — montaje de medio día y desmontaje de día completo
   makeEvent({
     id: "evt-6",
     roomId: "room-2",
@@ -228,13 +231,15 @@ export const EVENTS: CalendarEvent[] = [
     startTime: "09:00",
     endTime: "18:30",
     days: buildDays([
+      { weekOffset: 1, dayIndex: 0, isSetup: true, setupDuration: "half" },
       { weekOffset: 1, dayIndex: 1, catering: 90, overnight: 40, attendees: 90 },
       { weekOffset: 1, dayIndex: 2, catering: 90, overnight: 40, attendees: 90 },
       { weekOffset: 1, dayIndex: 3, catering: 90, overnight: 40, attendees: 90 },
+      { weekOffset: 1, dayIndex: 4, isSetup: true, setupDuration: "full" },
     ]),
   }),
 
-  // Caso: evento pasado
+  // Caso: evento pasado — con montaje de día completo el día antes
   makeEvent({
     id: "evt-7",
     roomId: "room-1",
@@ -243,10 +248,13 @@ export const EVENTS: CalendarEvent[] = [
     managerEmail: CURRENT_USER_EMAIL,
     startTime: "11:00",
     endTime: "12:30",
-    days: buildDays([{ weekOffset: -1, dayIndex: 3, catering: 15, attendees: 15 }]),
+    days: buildDays([
+      { weekOffset: -1, dayIndex: 2, isSetup: true, setupDuration: "full" },
+      { weekOffset: -1, dayIndex: 3, catering: 15, attendees: 15 },
+    ]),
   }),
 
-  // Caso: evento anulado
+  // Caso: evento anulado — con montaje de medio día antes
   makeEvent({
     id: "evt-8",
     roomId: "room-magna",
@@ -257,6 +265,7 @@ export const EVENTS: CalendarEvent[] = [
     endTime: "17:00",
     override: "anulado",
     days: buildDays([
+      { weekOffset: -1, dayIndex: 0, isSetup: true, setupDuration: "half" },
       { weekOffset: -1, dayIndex: 1, catering: 40, attendees: 40 },
       { weekOffset: -1, dayIndex: 2, catering: 40, attendees: 40 },
     ]),
@@ -276,6 +285,23 @@ export const EVENTS: CalendarEvent[] = [
       { weekOffset: -1, dayIndex: 6, catering: 90, overnight: 30, attendees: 30 },
       { weekOffset: 0, dayIndex: 0, catering: 90, overnight: 30, attendees: 30 },
       { weekOffset: 0, dayIndex: 1, catering: 90, overnight: 30, attendees: 30 },
+    ]),
+  }),
+
+  // Caso: montaje de medio día y desmontaje de día completo en la misma pastilla
+  makeEvent({
+    id: "evt-11",
+    roomId: "room-2",
+    name: "Feria de Innovación Digital",
+    promoter: "Laura Cifuentes",
+    managerEmail: "ana.perez@iberdrola.com",
+    startTime: "09:00",
+    endTime: "18:00",
+    days: buildDays([
+      { weekOffset: 0, dayIndex: 0, isSetup: true, setupDuration: "half" },
+      { weekOffset: 0, dayIndex: 1, catering: 70, overnight: 20, attendees: 70 },
+      { weekOffset: 0, dayIndex: 2, catering: 70, overnight: 20, attendees: 70 },
+      { weekOffset: 0, dayIndex: 3, isSetup: true, setupDuration: "full" },
     ]),
   }),
 

@@ -8,6 +8,8 @@ export interface StatusStyle {
   cardBg: string;
   cardBorder: string;
   textColor: string;
+  /** R,G,B triplet used to tint the medio-día montaje/desmontaje diagonal stripes. */
+  stripeRgb: string;
 }
 
 export const STATUS_STYLES: Record<EventStatus, StatusStyle> = {
@@ -19,6 +21,7 @@ export const STATUS_STYLES: Record<EventStatus, StatusStyle> = {
     cardBg: "bg-blue-100",
     cardBorder: "border-blue-300",
     textColor: "text-slate-900",
+    stripeRgb: "5, 150, 105",
   },
   futuro: {
     label: "Planing",
@@ -28,6 +31,7 @@ export const STATUS_STYLES: Record<EventStatus, StatusStyle> = {
     cardBg: "bg-blue-50",
     cardBorder: "border-blue-200",
     textColor: "text-slate-900",
+    stripeRgb: "37, 99, 235",
   },
   pasado: {
     label: "Pasado",
@@ -37,6 +41,7 @@ export const STATUS_STYLES: Record<EventStatus, StatusStyle> = {
     cardBg: "bg-slate-100",
     cardBorder: "border-slate-300",
     textColor: "text-slate-500",
+    stripeRgb: "100, 116, 139",
   },
   anulado: {
     label: "Anulado",
@@ -46,6 +51,7 @@ export const STATUS_STYLES: Record<EventStatus, StatusStyle> = {
     cardBg: "bg-red-50",
     cardBorder: "border-red-200",
     textColor: "text-slate-500",
+    stripeRgb: "239, 68, 68",
   },
   "pre-reserva": {
     label: "Pre-reserva",
@@ -55,6 +61,7 @@ export const STATUS_STYLES: Record<EventStatus, StatusStyle> = {
     cardBg: "bg-sky-50",
     cardBorder: "border-sky-300",
     textColor: "text-slate-900",
+    stripeRgb: "14, 165, 233",
   },
 };
 

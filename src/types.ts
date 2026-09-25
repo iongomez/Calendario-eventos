@@ -32,6 +32,8 @@ export interface DailyCatering {
   attendees: number;
   /** true if this date is a load-in/load-out day rather than the event itself */
   isSetup: boolean;
+  /** Only meaningful when isSetup is true: does montaje/desmontaje take the whole day or just part of it? */
+  setupDuration?: "full" | "half";
 }
 
 export interface CalendarEvent {

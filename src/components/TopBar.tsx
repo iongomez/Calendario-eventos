@@ -28,7 +28,7 @@ export function TopBar({ weekStart, onWeekStartChange, viewMode, onViewModeChang
         </button>
 
         {/* Read-only: shows the month(s) the visible week falls in, not itself selectable. */}
-        <div className="flex w-[210px] shrink-0 items-center justify-center rounded-full border border-slate-300 px-3.5 py-2 text-base font-medium text-slate-700">
+        <div className="flex w-[170px] shrink-0 items-center justify-center py-2 text-base font-medium text-slate-700">
           {formatWeekMonthPill(weekStart)}
         </div>
 

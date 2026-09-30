@@ -84,6 +84,43 @@ export function formatWeekRangeLabel(weekStart: Date): string {
   return `${startDay} ${startMonth} ${startYear} – ${endDay} ${endMonth} ${endYear}`;
 }
 
+const MONTH_NAMES = [
+  "enero",
+  "febrero",
+  "marzo",
+  "abril",
+  "mayo",
+  "junio",
+  "julio",
+  "agosto",
+  "septiembre",
+  "octubre",
+  "noviembre",
+  "diciembre",
+];
+
+export function formatMonthYear(date: Date): string {
+  const month = MONTH_NAMES[date.getMonth()];
+  return `${month.charAt(0).toUpperCase()}${month.slice(1)} ${date.getFullYear()}`;
+}
+
+export function isSameMonth(a: Date, b: Date): boolean {
+  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth();
+}
+
+/** Every calendar week (Mon-Sun) needed to fully display `monthDate`'s month. */
+export function getMonthWeeks(monthDate: Date): Date[][] {
+  const firstOfMonth = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1);
+  const lastOfMonth = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0);
+  const weeks: Date[][] = [];
+  let weekStart = startOfWeek(firstOfMonth);
+  while (weekStart <= lastOfMonth) {
+    weeks.push(getWeekDays(weekStart));
+    weekStart = addDays(weekStart, 7);
+  }
+  return weeks;
+}
+
 export function dayName(date: Date): string {
   const dow = date.getDay();
   return DAY_NAMES[dow === 0 ? 6 : dow - 1];

@@ -55,30 +55,30 @@ export function WeekPickerDrawer({ initialWeekStart, onClose, onSelect }: WeekPi
         </div>
 
         <div className="flex-1 overflow-y-auto px-5 py-5">
-          <h2 className="mb-5 text-xl font-bold text-slate-900">Selecciona la semana</h2>
+          <h2 className="text-xl font-bold text-slate-900">Selecciona la semana</h2>
+          <p className="mb-5 mt-1 text-sm text-slate-500">Semana {getISOWeekNumber(staged)}</p>
 
           <div className="mb-3 flex items-center justify-between">
             <button
               type="button"
               onClick={() => setViewMonth(new Date(viewMonth.getFullYear(), viewMonth.getMonth() - 1, 1))}
               aria-label="Mes anterior"
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-300 text-slate-600 hover:bg-slate-50"
+              className="flex h-8 w-8 items-center justify-center rounded-full text-slate-600 hover:bg-slate-100"
             >
-              <ChevronLeft size={16} />
+              <ChevronLeft size={18} />
             </button>
             <span className="text-base font-semibold text-slate-900">{formatMonthYear(viewMonth)}</span>
             <button
               type="button"
               onClick={() => setViewMonth(new Date(viewMonth.getFullYear(), viewMonth.getMonth() + 1, 1))}
               aria-label="Mes siguiente"
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-300 text-slate-600 hover:bg-slate-50"
+              className="flex h-8 w-8 items-center justify-center rounded-full text-slate-600 hover:bg-slate-100"
             >
-              <ChevronRight size={16} />
+              <ChevronRight size={18} />
             </button>
           </div>
 
           <div className="flex text-center text-xs font-medium text-slate-400">
-            <span className="w-12 shrink-0" />
             {DAY_HEADS.map((d, i) => (
               <span key={i} className="flex-1 py-1.5">
                 {d}
@@ -86,7 +86,7 @@ export function WeekPickerDrawer({ initialWeekStart, onClose, onSelect }: WeekPi
             ))}
           </div>
 
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-0.5">
             {weeks.map((week) => {
               const weekStart = week[0];
               const weekISO = toISODate(weekStart);
@@ -97,23 +97,20 @@ export function WeekPickerDrawer({ initialWeekStart, onClose, onSelect }: WeekPi
                   key={weekISO}
                   type="button"
                   onClick={() => setStaged(weekStart)}
-                  className={`group relative flex items-center rounded-md ${isStaged ? "bg-slate-200" : "hover:bg-slate-100"}`}
+                  className={`flex rounded-full ${isStaged ? "bg-blue-600" : "hover:bg-blue-50"}`}
                 >
-                  <span
-                    className={`flex w-12 shrink-0 items-center justify-center text-[10px] font-medium text-slate-400 opacity-0 transition-opacity ${
-                      isStaged ? "opacity-100 text-slate-600" : "group-hover:opacity-100"
-                    }`}
-                  >
-                    Sem. {getISOWeekNumber(weekStart)}
-                  </span>
                   {week.map((day) => {
                     const inMonth = isSameMonth(day, viewMonth);
-                    const today = isToday(day);
+                    const today = isToday(day) && !isStaged;
                     return (
                       <span
                         key={toISODate(day)}
                         className={`flex-1 py-2.5 text-center text-sm ${
-                          inMonth ? "text-slate-800" : "text-slate-300"
+                          isStaged
+                            ? "font-bold text-white"
+                            : inMonth
+                              ? "text-slate-800"
+                              : "text-slate-300"
                         } ${today ? "font-bold text-emerald-600" : ""}`}
                       >
                         {day.getDate()}

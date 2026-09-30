@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { CalendarDays, ChevronLeft, ChevronRight, LayoutGrid, List } from "lucide-react";
-import { formatWeekLabel, formatWeekRangeLabel, startOfWeek } from "../utils/dateUtils";
+import { formatWeekMonthPill, formatWeekNumberLabel, startOfWeek } from "../utils/dateUtils";
 import { WeekPickerDrawer } from "./WeekPickerDrawer";
 
 interface TopBarProps {
@@ -22,22 +22,24 @@ export function TopBar({ weekStart, onWeekStartChange, viewMode, onViewModeChang
         <button
           type="button"
           onClick={goToday}
-          className="rounded-full border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+          className="rounded-full border border-slate-300 px-3.5 py-2 text-base font-medium text-slate-700 hover:bg-slate-50"
         >
           Hoy
         </button>
+
+        {/* Read-only: shows the month(s) the visible week falls in, not itself selectable. */}
+        <div className="flex w-[210px] shrink-0 items-center justify-center rounded-full border border-slate-300 px-3.5 py-2 text-base font-medium text-slate-700">
+          {formatWeekMonthPill(weekStart)}
+        </div>
 
         <button
           type="button"
           onClick={() => setPickerOpen(true)}
           aria-label="Seleccionar semana"
-          className="flex w-[365px] shrink-0 items-center gap-1.5 rounded-full border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+          className="flex items-center gap-2 rounded-full border border-slate-300 px-3.5 py-2 text-base font-medium text-slate-700 hover:bg-slate-50"
         >
-          <CalendarDays size={15} className="shrink-0" />
-          <span className="truncate whitespace-nowrap">
-            {formatWeekRangeLabel(weekStart)}
-            <span className="font-normal text-slate-400"> · {formatWeekLabel(weekStart)}</span>
-          </span>
+          <span>{formatWeekNumberLabel(weekStart)}</span>
+          <CalendarDays size={17} />
         </button>
 
         {pickerOpen && (
@@ -56,17 +58,17 @@ export function TopBar({ weekStart, onWeekStartChange, viewMode, onViewModeChang
             type="button"
             onClick={goPrev}
             aria-label="Semana anterior"
-            className="flex h-8 w-8 items-center justify-center rounded-full text-slate-500 hover:bg-slate-100"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-slate-500 hover:bg-slate-100"
           >
-            <ChevronLeft size={18} />
+            <ChevronLeft size={20} />
           </button>
           <button
             type="button"
             onClick={goNext}
             aria-label="Semana siguiente"
-            className="flex h-8 w-8 items-center justify-center rounded-full text-slate-500 hover:bg-slate-100"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-slate-500 hover:bg-slate-100"
           >
-            <ChevronRight size={18} />
+            <ChevronRight size={20} />
           </button>
         </div>
       </div>

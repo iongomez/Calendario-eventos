@@ -41,49 +41,6 @@ export function getISOWeekNumber(date: Date): number {
   return Math.ceil(((d.getTime() - yearStart.getTime()) / MS_PER_DAY + 1) / 7);
 }
 
-export function formatWeekLabel(weekStart: Date): string {
-  const week = getISOWeekNumber(weekStart);
-  return `Semana ${String(week).padStart(2, "0")}, ${weekStart.getFullYear()}`;
-}
-
-const MONTH_ABBR = [
-  "ene",
-  "feb",
-  "mar",
-  "abr",
-  "may",
-  "jun",
-  "jul",
-  "ago",
-  "sept",
-  "oct",
-  "nov",
-  "dic",
-];
-
-/**
- * Date range of the visible week, always naming the month(s) it spans
- * (e.g. "28 sept – 4 oct 2026") — a bare week number doesn't say what
- * month you're looking at, especially for a week that crosses months.
- */
-export function formatWeekRangeLabel(weekStart: Date): string {
-  const weekEnd = addDays(weekStart, 6);
-  const startDay = weekStart.getDate();
-  const endDay = weekEnd.getDate();
-  const startMonth = MONTH_ABBR[weekStart.getMonth()];
-  const endMonth = MONTH_ABBR[weekEnd.getMonth()];
-  const startYear = weekStart.getFullYear();
-  const endYear = weekEnd.getFullYear();
-
-  if (startMonth === endMonth && startYear === endYear) {
-    return `${startDay} – ${endDay} ${endMonth} ${endYear}`;
-  }
-  if (startYear === endYear) {
-    return `${startDay} ${startMonth} – ${endDay} ${endMonth} ${endYear}`;
-  }
-  return `${startDay} ${startMonth} ${startYear} – ${endDay} ${endMonth} ${endYear}`;
-}
-
 const MONTH_NAMES = [
   "enero",
   "febrero",
@@ -102,6 +59,44 @@ const MONTH_NAMES = [
 export function formatMonthYear(date: Date): string {
   const month = MONTH_NAMES[date.getMonth()];
   return `${month.charAt(0).toUpperCase()}${month.slice(1)} ${date.getFullYear()}`;
+}
+
+const MONTH_ABBR3 = [
+  "Ene",
+  "Feb",
+  "Mar",
+  "Abr",
+  "May",
+  "Jun",
+  "Jul",
+  "Ago",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dic",
+];
+
+/** Just the month(s)/year the visible week falls in, e.g. "Sep 2026" or "Sep - Oct 2026". */
+export function formatWeekMonthPill(weekStart: Date): string {
+  const weekEnd = addDays(weekStart, 6);
+  const startMonth = MONTH_ABBR3[weekStart.getMonth()];
+  const endMonth = MONTH_ABBR3[weekEnd.getMonth()];
+  const startYear = weekStart.getFullYear();
+  const endYear = weekEnd.getFullYear();
+
+  if (startMonth === endMonth && startYear === endYear) {
+    return `${startMonth} ${startYear}`;
+  }
+  if (startYear === endYear) {
+    return `${startMonth} - ${endMonth} ${startYear}`;
+  }
+  return `${startMonth} ${startYear} - ${endMonth} ${endYear}`;
+}
+
+/** Just "Semana NN" — the year lives in the month pill next to it. */
+export function formatWeekNumberLabel(weekStart: Date): string {
+  const week = getISOWeekNumber(weekStart);
+  return `Semana ${String(week).padStart(2, "0")}`;
 }
 
 export function isSameMonth(a: Date, b: Date): boolean {

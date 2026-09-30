@@ -252,10 +252,12 @@ function shortDate(iso: string): string {
 export function ConflictWarning({
   events,
   roomName,
+  hint = "Cambia las fechas o quita esta sala para poder continuar.",
   className = "",
 }: {
   events: CalendarEvent[];
   roomName?: string;
+  hint?: string;
   className?: string;
 }) {
   if (events.length === 0) return null;
@@ -277,7 +279,7 @@ export function ConflictWarning({
             </li>
           ))}
         </ul>
-        <p className="mt-1">Cambia las fechas o elige otra sala para evitar el solape.</p>
+        <p className="mt-1">{hint}</p>
       </div>
     </div>
   );

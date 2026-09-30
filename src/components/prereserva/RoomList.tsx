@@ -2,7 +2,7 @@ import { Check, LayoutGrid, MapPin, Search, Star, Users } from "lucide-react";
 import { EVENTS, ROOMS, SITES } from "../../data/mockData";
 import type { Room } from "../../types";
 import { fromISODate } from "../../utils/dateUtils";
-import { computeRoomAvailability, roomConflicts } from "./flowState";
+import { computeRoomAvailability, hasSelectedRoomConflicts, roomConflicts } from "./flowState";
 import { useFlow } from "./FlowContext";
 import { ConflictWarning, DarkGreenButton, FooterBar, RulerIcon, SecondaryButton, StepHeader } from "./ui";
 
@@ -141,7 +141,10 @@ export function RoomList() {
         })}
       </div>
       <FooterBar>
-        <DarkGreenButton disabled={state.salasSeleccionadas.length === 0} onClick={() => nav("espacios")}>
+        <DarkGreenButton
+          disabled={state.salasSeleccionadas.length === 0 || hasSelectedRoomConflicts(ROOMS, EVENTS, state)}
+          onClick={() => nav("espacios")}
+        >
           Confirmar salas{state.salasSeleccionadas.length > 0 ? ` (${state.salasSeleccionadas.length})` : ""}
         </DarkGreenButton>
         <SecondaryButton onClick={back}>Volver</SecondaryButton>

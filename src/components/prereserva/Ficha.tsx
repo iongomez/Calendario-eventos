@@ -1,23 +1,10 @@
 import { useState } from "react";
-import { Building, Check, ChevronLeft, ChevronRight, Info, LayoutGrid, MapPin, Star, Users } from "lucide-react";
+import { Building, Check, Info, LayoutGrid, MapPin, Star, Users } from "lucide-react";
 import { EVENTS, ROOMS, SITES } from "../../data/mockData";
-import { formatMonthYear, getMonthWeeks, isSameMonth, toISODate } from "../../utils/dateUtils";
 import { activeDayCount, computeRoomAvailability, getRoomConfig, roomConflicts, roomDayKind, usageDayRange } from "./flowState";
 import { useFlow } from "./FlowContext";
+import { Legend, MonthGrid } from "./MonthGrid";
 import { ConfigRow, ConflictWarning, FooterBar, PrimaryButton, RulerIcon, SecondaryButton, StepHeader, Switch, ToggleRow } from "./ui";
-
-const HALF_DAY_STRIPES = "[background-image:repeating-linear-gradient(135deg,#e2e8f0,#e2e8f0_2px,#fff_2px,#fff_4px)]";
-
-const DOW = ["L", "M", "X", "J", "V", "S", "D"];
-
-const DAY_KIND_STYLE: Record<string, string> = {
-  "in-range": "bg-slate-900 text-white font-bold",
-  margin: "bg-blue-200 text-slate-800 font-semibold",
-  "other-event": "bg-slate-200 text-slate-400",
-  "half-day-event":
-    "bg-slate-100 text-slate-400 [background-image:repeating-linear-gradient(135deg,#e2e8f0,#e2e8f0_3px,transparent_3px,transparent_6px)]",
-  free: "text-slate-700",
-};
 
 export function Ficha() {
   const { state, update, back, close } = useFlow();
@@ -135,7 +122,6 @@ function FichaDetalle({
   const { state } = useFlow();
   const [dispExpanded, setDispExpanded] = useState(false);
   const [accesoriosExpanded, setAccesoriosExpanded] = useState(false);
-  const weeks = getMonthWeeks(calendarMonth);
   const site = SITES.find((s) => s.id === room.siteId);
 
   return (
@@ -174,53 +160,17 @@ function FichaDetalle({
       {dispExpanded ? (
         <>
           <div className="rounded-xl border border-slate-200 p-4">
-            <div className="mb-3 flex items-center justify-between font-semibold">
-              <button
-                type="button"
-                onClick={() => setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() - 1, 1))}
-                aria-label="Mes anterior"
-                className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50"
-              >
-                <ChevronLeft size={16} />
-              </button>
-              <span className="text-sm">{formatMonthYear(calendarMonth)}</span>
-              <button
-                type="button"
-                onClick={() => setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 1))}
-                aria-label="Mes siguiente"
-                className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50"
-              >
-                <ChevronRight size={16} />
-              </button>
-            </div>
-            <div className="grid grid-cols-7 gap-1 text-center">
-              {DOW.map((d) => (
-                <div key={d} className="pb-1 text-[11px] font-medium uppercase text-slate-400">
-                  {d}
-                </div>
-              ))}
-              {weeks.flat().map((date) => {
-                const iso = toISODate(date);
-                const kind = roomDayKind(room, iso, EVENTS, state);
-                const inMonth = isSameMonth(date, calendarMonth);
-                return (
-                  <div
-                    key={iso}
-                    className={`flex aspect-square items-center justify-center rounded-full text-sm ${DAY_KIND_STYLE[kind]} ${
-                      !inMonth && kind === "free" ? "text-slate-300" : ""
-                    }`}
-                  >
-                    {date.getDate()}
-                  </div>
-                );
-              })}
-            </div>
+            <MonthGrid month={calendarMonth} onMonthChange={setCalendarMonth} kindFor={(iso) => roomDayKind(room, iso, EVENTS, state)} />
           </div>
-          <div className="my-3 flex flex-wrap gap-x-3.5 gap-y-1.5 text-xs text-slate-600">
-            <Legend color="bg-slate-900" label="Evento actual" />
-            <Legend color="bg-blue-200" label="Montaje / desmontaje" />
-            <Legend color="bg-slate-200" label="Otros eventos" />
-            <Legend color={`bg-slate-200 ${HALF_DAY_STRIPES}`} label="Montaje/Desmontaje medio día" />
+          <div className="mb-3">
+            <Legend
+              kinds={[
+                { kind: "event", label: "Evento actual" },
+                { kind: "margin", label: "Montaje / desmontaje" },
+                { kind: "other-event", label: "Otros eventos" },
+                { kind: "half-day-event", label: "Montaje/Desmontaje medio día" },
+              ]}
+            />
           </div>
           <button type="button" onClick={() => setDispExpanded(false)} className="mb-1 text-sm font-medium text-blue-600 hover:underline">
             Ocultar disponibilidad
@@ -270,14 +220,6 @@ function InfoRow({ icon, children }: { icon: React.ReactNode; children: React.Re
       <span className="text-slate-400">{icon}</span>
       {children}
     </div>
-  );
-}
-function Legend({ color, label }: { color: string; label: string }) {
-  return (
-    <span className="flex items-center gap-1.5">
-      <i className={`inline-block h-2.5 w-2.5 rounded-full ${color}`} />
-      {label}
-    </span>
   );
 }
 

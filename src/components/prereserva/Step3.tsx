@@ -61,7 +61,8 @@ export function Step3() {
         {isPrereserva && <p className="mt-2.5 text-xs text-slate-400">En una pre-reserva, la selección de espacios es obligatoria.</p>}
       </div>
       <FooterBar>
-        <PrimaryButton onClick={continuar}>Continuar</PrimaryButton>
+        {/* Without "Selección de espacios" this is the last step before the summary. */}
+        <PrimaryButton onClick={continuar}>{isPrereserva || state.secciones.espacios ? "Continuar" : "Finalizar"}</PrimaryButton>
       </FooterBar>
     </>
   );

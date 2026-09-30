@@ -1,6 +1,6 @@
 import { AlertTriangle, Plus, Settings, Star, Trash2, Users } from "lucide-react";
 import { EVENTS, ROOMS } from "../../data/mockData";
-import { roomConflicts, totalSteps } from "./flowState";
+import { hasSelectedRoomConflicts, roomConflicts, totalSteps } from "./flowState";
 import { useFlow } from "./FlowContext";
 import { ConflictWarning, FooterBar, PrimaryButton, RulerIcon, StepHeader } from "./ui";
 
@@ -94,8 +94,9 @@ export function Espacios() {
         )}
       </div>
       <FooterBar>
-        <PrimaryButton disabled={salas.length === 0} onClick={() => nav("completion")}>
-          Continuar
+        {/* Espacios is always the last step, so it closes the flow instead of "Continuar". */}
+        <PrimaryButton disabled={salas.length === 0 || hasSelectedRoomConflicts(ROOMS, EVENTS, state)} onClick={() => nav("completion")}>
+          Finalizar
         </PrimaryButton>
       </FooterBar>
     </>

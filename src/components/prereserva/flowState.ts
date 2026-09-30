@@ -142,13 +142,35 @@ export type RoomAvailability = "disponible" | "reservado" | "no_reservable";
  * the room, montaje/desmontaje margin days included — same span the calendar draws for each pill.
  */
 export function roomConflicts(room: Room, events: CalendarEvent[], state: FlowState): CalendarEvent[] {
-  const days = usageDayRange(state);
+  // Days the room is switched off in its own schedule don't book it, so they can't clash.
+  const horario = state.roomConfig[room.id]?.horario;
+  const days = usageDayRange(state).filter((d) => !horario?.[d] || horario[d].activo);
   if (days.length === 0) return [];
-  const first = days[0];
-  const last = days[days.length - 1];
   return events.filter(
-    (e) => e.roomId === room.id && e.status !== "anulado" && !(e.endDate < first || e.startDate > last),
+    (e) => e.roomId === room.id && e.status !== "anulado" && days.some((d) => d >= e.startDate && d <= e.endDate),
   );
+}
+
+/** True when any room already in the pre-reserva clashes with another event; blocks moving forward. */
+export function hasSelectedRoomConflicts(rooms: Room[], events: CalendarEvent[], state: FlowState): boolean {
+  return state.salasSeleccionadas.some((id) => {
+    const room = rooms.find((r) => r.id === id);
+    return room !== undefined && roomConflicts(room, events, state).length > 0;
+  });
+}
+
+/** How a day looks in the "Escoge las fechas" calendar. */
+export function eventDayKind(state: FlowState, iso: string): "free" | "event" | "margin" {
+  if (!state.fechaInicio) return "free";
+  const start = state.fechaInicio;
+  const end = state.fechaFin || state.fechaInicio;
+  if (iso >= start && iso <= end) return "event";
+  if (state.montaje) {
+    const marginStart = toISODate(addDays(fromISODate(start), -state.diasPrevios));
+    const marginEnd = toISODate(addDays(fromISODate(end), state.diasPosteriores));
+    if ((iso >= marginStart && iso < start) || (iso > end && iso <= marginEnd)) return "margin";
+  }
+  return "free";
 }
 
 /** Real availability, checked against the app's actual bookings. */
@@ -158,7 +180,7 @@ export function computeRoomAvailability(room: Room, events: CalendarEvent[], sta
 }
 
 /** Day classification for a room's own "ver disponibilidad" calendar. */
-export type RoomDayKind = "free" | "in-range" | "margin" | "other-event" | "half-day-event";
+export type RoomDayKind = "free" | "event" | "margin" | "other-event" | "half-day-event";
 
 export function roomDayKind(
   room: Room,
@@ -174,12 +196,12 @@ export function roomDayKind(
     return "other-event";
   }
   const horario = state.roomConfig[room.id]?.horario?.[date];
-  if (horario) return horario.activo ? (horario.montaje ? "margin" : "in-range") : "free";
+  if (horario) return horario.activo ? (horario.montaje ? "margin" : "event") : "free";
   // Fall back to the event's own general date range until the room has its own schedule.
   if (state.fechaInicio) {
     const start = state.fechaInicio;
     const end = state.fechaFin || state.fechaInicio;
-    if (date >= start && date <= end) return "in-range";
+    if (date >= start && date <= end) return "event";
     if (state.montaje) {
       const marginStart = toISODate(addDays(fromISODate(start), -state.diasPrevios));
       const marginEnd = toISODate(addDays(fromISODate(end), state.diasPosteriores));

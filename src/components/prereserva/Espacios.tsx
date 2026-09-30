@@ -1,8 +1,8 @@
 import { AlertTriangle, Plus, Settings, Star, Trash2, Users } from "lucide-react";
-import { ROOMS } from "../../data/mockData";
-import { totalSteps } from "./flowState";
+import { EVENTS, ROOMS } from "../../data/mockData";
+import { roomConflicts, totalSteps } from "./flowState";
 import { useFlow } from "./FlowContext";
-import { FooterBar, PrimaryButton, RulerIcon, StepHeader } from "./ui";
+import { ConflictWarning, FooterBar, PrimaryButton, RulerIcon, StepHeader } from "./ui";
 
 export function Espacios() {
   const { state, update, nav, back, close } = useFlow();
@@ -88,6 +88,7 @@ export function Espacios() {
                   </div>
                 </div>
               </div>
+              <ConflictWarning events={roomConflicts(room, EVENTS, state)} className="mt-3" />
             </div>
           ))
         )}

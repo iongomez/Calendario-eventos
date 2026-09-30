@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { ChevronDown, ChevronLeft, ChevronRight, Minus, Plus, X } from "lucide-react";
+import { AlertTriangle, ChevronDown, ChevronLeft, ChevronRight, Minus, Plus, X } from "lucide-react";
+import type { CalendarEvent } from "../../types";
 
 /** Horizontal ruler from the final design; lucide's Ruler is a diagonal one. */
 export function RulerIcon({ size = 15, className }: { size?: number; className?: string }) {
@@ -238,6 +239,46 @@ export function StepHeader({
       </div>
       {step && <p className="mt-1 text-xs text-slate-400">{step}</p>}
       {title && <h1 className="mt-1 text-xl font-bold text-slate-900">{title}</h1>}
+    </div>
+  );
+}
+
+function shortDate(iso: string): string {
+  const [, m, d] = iso.split("-");
+  return `${d}/${m}`;
+}
+
+/** Warns that the room already has other calendar events on the days this pre-reserva would use it. */
+export function ConflictWarning({
+  events,
+  roomName,
+  className = "",
+}: {
+  events: CalendarEvent[];
+  roomName?: string;
+  className?: string;
+}) {
+  if (events.length === 0) return null;
+  return (
+    <div
+      role="alert"
+      className={`flex gap-2.5 rounded-lg border border-[#F5D9A0] bg-[#FFF6E9] px-3.5 py-3 text-xs leading-relaxed text-[#8A5200] ${className}`}
+    >
+      <AlertTriangle size={15} className="mt-0.5 shrink-0" />
+      <div>
+        <p className="font-semibold">
+          {roomName ? `${roomName} ya tiene` : "Ya hay"} {events.length === 1 ? "otro evento" : `${events.length} eventos`} en
+          estas fechas
+        </p>
+        <ul className="mt-1">
+          {events.map((e) => (
+            <li key={e.id}>
+              {e.name} · {e.startDate === e.endDate ? shortDate(e.startDate) : `${shortDate(e.startDate)} – ${shortDate(e.endDate)}`}
+            </li>
+          ))}
+        </ul>
+        <p className="mt-1">Cambia las fechas o elige otra sala para evitar el solape.</p>
+      </div>
     </div>
   );
 }

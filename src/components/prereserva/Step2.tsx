@@ -1,8 +1,9 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { addDays, formatMonthYear, getMonthWeeks, isSameMonth, isToday, toISODate } from "../../utils/dateUtils";
-import { totalSteps } from "./flowState";
+import { roomConflicts, totalSteps } from "./flowState";
 import { useFlow } from "./FlowContext";
-import { FooterBar, PrimaryButton, StepHeader, Stepper, ToggleRow } from "./ui";
+import { EVENTS, ROOMS } from "../../data/mockData";
+import { ConflictWarning, FooterBar, PrimaryButton, StepHeader, Stepper, ToggleRow } from "./ui";
 
 const DOW = ["L", "M", "X", "J", "V", "S", "D"];
 
@@ -102,6 +103,11 @@ export function Step2() {
             </span>
           </div>
         </div>
+
+        {state.salasSeleccionadas.map((id) => {
+          const room = ROOMS.find((r) => r.id === id);
+          return room ? <ConflictWarning key={id} roomName={room.name} events={roomConflicts(room, EVENTS, state)} className="mt-3" /> : null;
+        })}
 
         <hr className="my-4 border-slate-100" />
 

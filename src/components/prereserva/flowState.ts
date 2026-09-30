@@ -137,20 +137,24 @@ export function activeDayCount(state: FlowState, room: Room): number {
 
 export type RoomAvailability = "disponible" | "reservado" | "no_reservable";
 
-/** Real availability, checked against the app's actual bookings (excluding cancelled events). */
-export function computeRoomAvailability(
-  room: Room,
-  events: CalendarEvent[],
-  fechaInicio: string | null,
-  fechaFin: string | null,
-): RoomAvailability {
-  if (!room.reservable) return "no_reservable";
-  if (!fechaInicio) return "disponible";
-  const end = fechaFin || fechaInicio;
-  const conflict = events.some(
-    (e) => e.roomId === room.id && e.status !== "anulado" && !(e.endDate < fechaInicio || e.startDate > end),
+/**
+ * Calendar events (excluding cancelled ones) that overlap the days this pre-reserva would occupy
+ * the room, montaje/desmontaje margin days included — same span the calendar draws for each pill.
+ */
+export function roomConflicts(room: Room, events: CalendarEvent[], state: FlowState): CalendarEvent[] {
+  const days = usageDayRange(state);
+  if (days.length === 0) return [];
+  const first = days[0];
+  const last = days[days.length - 1];
+  return events.filter(
+    (e) => e.roomId === room.id && e.status !== "anulado" && !(e.endDate < first || e.startDate > last),
   );
-  return conflict ? "reservado" : "disponible";
+}
+
+/** Real availability, checked against the app's actual bookings. */
+export function computeRoomAvailability(room: Room, events: CalendarEvent[], state: FlowState): RoomAvailability {
+  if (!room.reservable) return "no_reservable";
+  return roomConflicts(room, events, state).length > 0 ? "reservado" : "disponible";
 }
 
 /** Day classification for a room's own "ver disponibilidad" calendar. */

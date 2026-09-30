@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Building, Check, ChevronLeft, ChevronRight, Info, LayoutGrid, MapPin, Star, Users } from "lucide-react";
 import { EVENTS, ROOMS, SITES } from "../../data/mockData";
 import { formatMonthYear, getMonthWeeks, isSameMonth, toISODate } from "../../utils/dateUtils";
-import { activeDayCount, computeRoomAvailability, getRoomConfig, roomDayKind, usageDayRange } from "./flowState";
+import { activeDayCount, computeRoomAvailability, getRoomConfig, roomConflicts, roomDayKind, usageDayRange } from "./flowState";
 import { useFlow } from "./FlowContext";
-import { ConfigRow, FooterBar, PrimaryButton, RulerIcon, SecondaryButton, StepHeader, Switch, ToggleRow } from "./ui";
+import { ConfigRow, ConflictWarning, FooterBar, PrimaryButton, RulerIcon, SecondaryButton, StepHeader, Switch, ToggleRow } from "./ui";
 
 const HALF_DAY_STRIPES = "[background-image:repeating-linear-gradient(135deg,#e2e8f0,#e2e8f0_2px,#fff_2px,#fff_4px)]";
 
@@ -25,7 +25,7 @@ export function Ficha() {
   const [calendarMonth, setCalendarMonth] = useState(state.fichaCalendarMonth);
   if (!room) return null;
 
-  const status = computeRoomAvailability(room, EVENTS, state.fechaInicio, state.fechaFin);
+  const status = computeRoomAvailability(room, EVENTS, state);
   const disponible = status === "disponible";
   const yaAnadida = state.salasSeleccionadas.includes(room.id);
   const totalDias = usageDayRange(state);
@@ -161,6 +161,8 @@ function FichaDetalle({
         {disponible && <Check size={15} />}
         {disponible ? "Disponible" : statusLabel(status)}
       </div>
+
+      <ConflictWarning events={roomConflicts(room, EVENTS, state)} className="mb-3.5" />
 
       {room.alert && (
         <div className="mb-3.5 flex gap-2.5 rounded-lg border border-blue-200 bg-blue-50 px-3.5 py-3 text-xs leading-relaxed text-blue-900">

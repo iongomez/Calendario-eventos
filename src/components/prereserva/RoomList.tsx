@@ -1,9 +1,10 @@
 import { Check, LayoutGrid, MapPin, Search, Star, Users } from "lucide-react";
 import { EVENTS, ROOMS, SITES } from "../../data/mockData";
 import type { Room } from "../../types";
-import { computeRoomAvailability } from "./flowState";
+import { fromISODate } from "../../utils/dateUtils";
+import { computeRoomAvailability, roomConflicts } from "./flowState";
 import { useFlow } from "./FlowContext";
-import { DarkGreenButton, FooterBar, RulerIcon, SecondaryButton, StepHeader } from "./ui";
+import { ConflictWarning, DarkGreenButton, FooterBar, RulerIcon, SecondaryButton, StepHeader } from "./ui";
 
 function statusLabel(status: ReturnType<typeof computeRoomAvailability>): string {
   if (status === "disponible") return "Disponible";
@@ -37,16 +38,17 @@ export function RoomList() {
     nav("ficha");
   }
 
+  const fmt = (iso: string) => fromISODate(iso).toLocaleDateString("es-ES", { day: "numeric", month: "short" });
   const dateLabel = state.fechaInicio
     ? state.fechaFin && state.fechaFin !== state.fechaInicio
-      ? `${state.fechaInicio} – ${state.fechaFin}`
-      : state.fechaInicio
+      ? `${fmt(state.fechaInicio)} – ${fmt(state.fechaFin)}`
+      : fmt(state.fechaInicio)
     : "Sin fechas";
 
   return (
     <>
       <div className="flex-1 overflow-y-auto px-6 pb-6">
-        <StepHeader onClose={close} title="Seleccionar espacios y salas" />
+        <StepHeader onBack={back} onClose={close} title="Seleccionar espacios y salas" />
 
         <div className="relative mt-4">
           <Search size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -78,7 +80,7 @@ export function RoomList() {
         </div>
 
         {filtered.map((room) => {
-          const status = computeRoomAvailability(room, EVENTS, state.fechaInicio, state.fechaFin);
+          const status = computeRoomAvailability(room, EVENTS, state);
           const disponible = status === "disponible";
           const selected = state.salasSeleccionadas.includes(room.id);
           const capWarn = asistentes > 0 && room.capacity < asistentes;
@@ -121,17 +123,19 @@ export function RoomList() {
                 <button type="button" onClick={() => openFicha(room)} className="text-xs font-medium text-blue-600 underline hover:no-underline">
                   Ver sala
                 </button>
+                {/* A room preselected from the calendar can end up reserved once dates change: it must stay removable. */}
                 <button
                   type="button"
-                  disabled={!disponible}
-                  onClick={() => disponible && toggleSala(room)}
+                  disabled={!disponible && !selected}
+                  onClick={() => (disponible || selected) && toggleSala(room)}
                   className={`flex h-[22px] w-[22px] items-center justify-center rounded-[5px] border-[1.5px] ${
                     selected ? "border-slate-900 bg-slate-900 text-white" : "border-slate-300"
-                  } ${!disponible ? "cursor-not-allowed opacity-40" : ""}`}
+                  } ${!disponible && !selected ? "cursor-not-allowed opacity-40" : ""}`}
                 >
                   {selected && <Check size={13} />}
                 </button>
               </div>
+              {selected && <ConflictWarning events={roomConflicts(room, EVENTS, state)} className="mt-3" />}
             </div>
           );
         })}

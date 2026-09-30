@@ -258,6 +258,11 @@ export function Step1() {
           onToggle={() => update((s) => ({ ...s, presenciaInstitucional: !s.presenciaInstitucional }))}
         />
         <ToggleRow
+          label="Presencia de asistentes externos"
+          on={state.presenciaExternos}
+          onToggle={() => update((s) => ({ ...s, presenciaExternos: !s.presenciaExternos }))}
+        />
+        <ToggleRow
           label="Añadir comentarios"
           on={state.comentarios}
           onToggle={() => update((s) => ({ ...s, comentarios: !s.comentarios }))}

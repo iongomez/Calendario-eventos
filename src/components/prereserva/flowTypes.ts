@@ -62,6 +62,7 @@ export interface FlowState {
   promotorSearchOpen: boolean;
   promotorQuery: string;
   presenciaInstitucional: boolean;
+  presenciaExternos: boolean;
   comentarios: boolean;
   comentariosTexto: string;
   fechaInicio: string | null;

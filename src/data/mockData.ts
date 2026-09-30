@@ -298,8 +298,11 @@ export interface Person {
   name: string;
 }
 
+/** Gestor profile of the logged-in user (Ion Gómez, see CURRENT_USER_EMAIL). */
+export const CURRENT_GESTOR: Person = { id: "U71655589J", name: "Gómez, Ion" };
+
 export const GESTORES: Person[] = [
-  { id: "U71655589J", name: "Gómez, Ion" },
+  CURRENT_GESTOR,
   { id: "U3839933", name: "López, Pedro" },
   { id: "U55210012", name: "Fernández, Elena" },
 ];

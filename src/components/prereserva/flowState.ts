@@ -1,3 +1,4 @@
+import { CURRENT_GESTOR } from "../../data/mockData";
 import type { CalendarEvent, Room } from "../../types";
 import { addDays, fromISODate, startOfWeek, toISODate } from "../../utils/dateUtils";
 import type { DiaHorario, FlowState, RoomConfig } from "./flowTypes";
@@ -22,13 +23,15 @@ export function freshState({ siteId, roomId, date }: FreshStateParams): FlowStat
     tipo: "",
     idFormativo: "",
     asistentes: "",
-    gestores: [],
+    // Whoever creates the event is its gestor by default; more can be added or this one removed.
+    gestores: [CURRENT_GESTOR],
     gestorSearchOpen: false,
     gestorQuery: "",
     promotor: null,
     promotorSearchOpen: false,
     promotorQuery: "",
     presenciaInstitucional: false,
+    presenciaExternos: false,
     comentarios: false,
     comentariosTexto: "",
     fechaInicio: date ?? null,

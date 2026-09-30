@@ -78,8 +78,43 @@ export const SITES: Site[] = [
   { id: "torre-iberdrola", name: "Torre Iberdrola" },
 ];
 
+const LAYOUTS_BY_TYPE: Record<string, string[]> = {
+  Auditorio: ["Teatro / Grada", "Solo escenario", "En círculo"],
+  "Sala de juntas": ["Mesa de juntas", "En U"],
+  "Sala de reuniones": ["Mesa de reuniones"],
+  Multiusos: ["Escuela", "En U", "Banquete"],
+  Aula: ["Escuela", "Mesa de trabajo"],
+  "Espacio exterior": ["Cóctel", "Libre"],
+};
+const AMENITIES_BY_TYPE: Record<string, string[]> = {
+  Auditorio: ["Enchufes: 20", "Proyector: 1", "Pantalla: 1"],
+  "Sala de juntas": ["Enchufes: 10", "Pantalla: 1"],
+  "Sala de reuniones": ["Enchufes: 6", "Pantalla: 1"],
+  Multiusos: ["Enchufes: 14", "Proyector: 1", "Pantalla: 1"],
+  Aula: ["Enchufes: 12", "Proyector: 1", "Pizarra: 1"],
+  "Espacio exterior": ["Enchufes: 8"],
+};
+const EXTRA_AMENITIES_BY_TYPE: Record<string, string[]> = {
+  Auditorio: ["Equipo de sonido: 1", "Wifi", "Aire acond.", "Calefacción", "Micrófono inalámbrico", "Pizarra"],
+  "Sala de juntas": ["Wifi", "Videoconferencia", "Aire acond."],
+  "Sala de reuniones": ["Wifi"],
+  Multiusos: ["Wifi", "Aire acond.", "Pizarra"],
+  Aula: ["Wifi", "Aire acond."],
+  "Espacio exterior": ["Wifi", "Toldo"],
+};
+
+function withRoomDetails(room: Omit<Room, "size" | "layouts" | "amenities" | "extraAmenities">): Room {
+  return {
+    ...room,
+    size: Math.round(room.capacity * 2.4),
+    layouts: LAYOUTS_BY_TYPE[room.type] ?? ["Libre"],
+    amenities: AMENITIES_BY_TYPE[room.type] ?? [],
+    extraAmenities: EXTRA_AMENITIES_BY_TYPE[room.type] ?? [],
+  };
+}
+
 export const ROOMS: Room[] = [
-  {
+  withRoomDetails({
     id: "room-auditorio",
     siteId: "san-agustin",
     code: "AUD-01",
@@ -88,8 +123,10 @@ export const ROOMS: Room[] = [
     type: "Auditorio",
     singular: true,
     reservable: true,
-  },
-  {
+    building: "Edificio 1, Planta 0",
+    alert: "El equipo de sonido está en revisión. Avisa a Audiovisuales con antelación si lo necesitas el día del evento.",
+  }),
+  withRoomDetails({
     id: "room-magna",
     siteId: "san-agustin",
     code: "SM-01",
@@ -98,8 +135,9 @@ export const ROOMS: Room[] = [
     type: "Sala de juntas",
     singular: false,
     reservable: true,
-  },
-  {
+    building: "Edificio 1, Planta 0",
+  }),
+  withRoomDetails({
     id: "room-1",
     siteId: "san-agustin",
     code: "S1-01",
@@ -108,8 +146,9 @@ export const ROOMS: Room[] = [
     type: "Sala de juntas",
     singular: false,
     reservable: true,
-  },
-  {
+    building: "Edificio 1, Planta 1",
+  }),
+  withRoomDetails({
     id: "room-2",
     siteId: "san-agustin",
     code: "S2-01",
@@ -118,8 +157,9 @@ export const ROOMS: Room[] = [
     type: "Sala de reuniones",
     singular: false,
     reservable: true,
-  },
-  {
+    building: "Edificio 1, Planta 1",
+  }),
+  withRoomDetails({
     id: "room-3",
     siteId: "san-agustin",
     code: "S3-01",
@@ -128,8 +168,9 @@ export const ROOMS: Room[] = [
     type: "Sala de reuniones",
     singular: false,
     reservable: false,
-  },
-  {
+    building: "Edificio 1, Planta 1",
+  }),
+  withRoomDetails({
     id: "room-4",
     siteId: "san-agustin",
     code: "S4-01",
@@ -138,8 +179,9 @@ export const ROOMS: Room[] = [
     type: "Sala de reuniones",
     singular: false,
     reservable: true,
-  },
-  {
+    building: "Edificio 2, Planta 0",
+  }),
+  withRoomDetails({
     id: "room-5",
     siteId: "san-agustin",
     code: "S5-01",
@@ -148,8 +190,9 @@ export const ROOMS: Room[] = [
     type: "Sala de reuniones",
     singular: false,
     reservable: true,
-  },
-  {
+    building: "Edificio 2, Planta 0",
+  }),
+  withRoomDetails({
     id: "room-6",
     siteId: "san-agustin",
     code: "S6-01",
@@ -158,8 +201,9 @@ export const ROOMS: Room[] = [
     type: "Sala de reuniones",
     singular: false,
     reservable: true,
-  },
-  {
+    building: "Edificio 2, Planta 0",
+  }),
+  withRoomDetails({
     id: "room-multiusos-a",
     siteId: "san-agustin",
     code: "MU-A1",
@@ -168,8 +212,9 @@ export const ROOMS: Room[] = [
     type: "Multiusos",
     singular: false,
     reservable: true,
-  },
-  {
+    building: "Edificio 2, Planta 1",
+  }),
+  withRoomDetails({
     id: "room-multiusos-b",
     siteId: "san-agustin",
     code: "MU-B1",
@@ -178,8 +223,9 @@ export const ROOMS: Room[] = [
     type: "Multiusos",
     singular: false,
     reservable: true,
-  },
-  {
+    building: "Edificio 2, Planta 1",
+  }),
+  withRoomDetails({
     id: "room-aula-1",
     siteId: "san-agustin",
     code: "AF-01",
@@ -188,8 +234,9 @@ export const ROOMS: Room[] = [
     type: "Aula",
     singular: false,
     reservable: true,
-  },
-  {
+    building: "Edificio 3, Planta 0",
+  }),
+  withRoomDetails({
     id: "room-aula-2",
     siteId: "san-agustin",
     code: "AF-02",
@@ -198,8 +245,9 @@ export const ROOMS: Room[] = [
     type: "Aula",
     singular: false,
     reservable: true,
-  },
-  {
+    building: "Edificio 3, Planta 0",
+  }),
+  withRoomDetails({
     id: "room-vip",
     siteId: "san-agustin",
     code: "VIP-01",
@@ -208,8 +256,9 @@ export const ROOMS: Room[] = [
     type: "Sala de reuniones",
     singular: true,
     reservable: true,
-  },
-  {
+    building: "Edificio 1, Planta 2",
+  }),
+  withRoomDetails({
     id: "room-terraza",
     siteId: "san-agustin",
     code: "TE-01",
@@ -218,8 +267,9 @@ export const ROOMS: Room[] = [
     type: "Espacio exterior",
     singular: true,
     reservable: true,
-  },
-  {
+    building: "Exterior",
+  }),
+  withRoomDetails({
     id: "room-ti-1",
     siteId: "torre-iberdrola",
     code: "TI-A1",
@@ -228,8 +278,9 @@ export const ROOMS: Room[] = [
     type: "Sala de reuniones",
     singular: false,
     reservable: true,
-  },
-  {
+    building: "Planta 12",
+  }),
+  withRoomDetails({
     id: "room-ti-2",
     siteId: "torre-iberdrola",
     code: "TI-A2",
@@ -238,8 +289,29 @@ export const ROOMS: Room[] = [
     type: "Auditorio",
     singular: true,
     reservable: true,
-  },
+    building: "Planta 1",
+  }),
 ];
+
+export interface Person {
+  id: string;
+  name: string;
+}
+
+export const GESTORES: Person[] = [
+  { id: "U71655589J", name: "Gómez, Ion" },
+  { id: "U3839933", name: "López, Pedro" },
+  { id: "U55210012", name: "Fernández, Elena" },
+];
+
+export const PROMOTORES: Person[] = [
+  { id: "U361682", name: "Montealegre, Patricia" },
+  { id: "U220144", name: "Ibáñez, Carlos" },
+  { id: "U330871", name: "Martín, Sofía" },
+  { id: "U445920", name: "Ruiz, Marta" },
+];
+
+export const TIPOS_EVENTO = ["Formativo", "Corporativo", "Institucional"];
 
 export const EVENTS: CalendarEvent[] = [
   // Caso: evento de 2 días, sin montaje/desmontaje

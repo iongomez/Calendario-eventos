@@ -19,6 +19,14 @@ export interface Room {
   type: string;
   singular: boolean;
   reservable: boolean;
+  /** m² — used in the pre-reserva flow's room detail ("ficha de sala"). */
+  size?: number;
+  building?: string;
+  layouts?: string[];
+  amenities?: string[];
+  extraAmenities?: string[];
+  /** Operational heads-up shown in the room's ficha (e.g. equipment under maintenance). */
+  alert?: string;
 }
 
 export interface DailyCatering {

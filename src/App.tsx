@@ -7,7 +7,7 @@ import { CompactGrid } from "./components/CompactGrid";
 import { Legend } from "./components/Legend";
 import { EventDetailStub } from "./components/EventDetailStub";
 import { RoomDetailStub } from "./components/RoomDetailStub";
-import { CreateEventModal } from "./components/CreateEventModal";
+import { PreReservaFlow } from "./components/prereserva/PreReservaFlow";
 import { CURRENT_USER_EMAIL, EVENTS, ROOMS, SITES } from "./data/mockData";
 import type { CalendarEvent, EventStatus, Room } from "./types";
 import { computeDayAggregates } from "./utils/aggregates";
@@ -142,13 +142,14 @@ export default function App() {
       )}
       {selectedRoom && <RoomDetailStub room={selectedRoom} onClose={() => setSelectedRoom(null)} />}
       {createTarget && (
-        <CreateEventModal
-          room={roomsById.get(createTarget.roomId)!}
+        <PreReservaFlow
+          siteId={siteId}
+          roomId={createTarget.roomId}
           date={createTarget.date}
           onClose={() => setCreateTarget(null)}
-          onCreated={(name) => {
-            setCreateTarget(null);
-            showToast(`"${name}" — continuarías en la ficha del evento (fuera de alcance del prototipo).`);
+          onCompleted={({ nombreEvento, flow }) => {
+            const label = nombreEvento ? `"${nombreEvento}"` : "El evento";
+            showToast(`${label} — ${flow === "prereserva" ? "pre-reserva creada" : "evento creado"} (fuera de alcance editar la ficha en este prototipo).`);
           }}
         />
       )}

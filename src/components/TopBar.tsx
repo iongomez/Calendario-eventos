@@ -1,5 +1,6 @@
+import { useRef } from "react";
 import { CalendarDays, ChevronLeft, ChevronRight, LayoutGrid, List } from "lucide-react";
-import { formatWeekLabel, fromISODate, startOfWeek, toISODate } from "../utils/dateUtils";
+import { formatWeekLabel, formatWeekRangeLabel, fromISODate, startOfWeek, toISODate } from "../utils/dateUtils";
 
 interface TopBarProps {
   weekStart: Date;
@@ -9,9 +10,21 @@ interface TopBarProps {
 }
 
 export function TopBar({ weekStart, onWeekStartChange, viewMode, onViewModeChange }: TopBarProps) {
+  const dateInputRef = useRef<HTMLInputElement>(null);
   const goToday = () => onWeekStartChange(startOfWeek(new Date()));
   const goPrev = () => onWeekStartChange(new Date(weekStart.getTime() - 7 * 24 * 60 * 60 * 1000));
   const goNext = () => onWeekStartChange(new Date(weekStart.getTime() + 7 * 24 * 60 * 60 * 1000));
+
+  const openWeekPicker = () => {
+    // showPicker() is the reliable way to open a native date input from our
+    // own click handler — clicking through an invisible overlay input alone
+    // doesn't consistently open the calendar in every browser.
+    if ("showPicker" in HTMLInputElement.prototype) {
+      dateInputRef.current?.showPicker();
+    } else {
+      dateInputRef.current?.focus();
+    }
+  };
 
   return (
     <div className="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-3">
@@ -24,17 +37,27 @@ export function TopBar({ weekStart, onWeekStartChange, viewMode, onViewModeChang
           Hoy
         </button>
 
-        <label className="relative flex items-center gap-1.5 rounded-full border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50">
-          <CalendarDays size={15} />
-          {formatWeekLabel(weekStart)}
+        <div className="relative">
+          <button
+            type="button"
+            onClick={openWeekPicker}
+            aria-label="Seleccionar semana"
+            className="flex items-center gap-1.5 rounded-full border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+          >
+            <CalendarDays size={15} />
+            <span>{formatWeekRangeLabel(weekStart)}</span>
+            <span className="text-xs font-normal text-slate-400">· {formatWeekLabel(weekStart)}</span>
+          </button>
           <input
+            ref={dateInputRef}
             type="date"
             value={toISODate(weekStart)}
             onChange={(e) => e.target.value && onWeekStartChange(startOfWeek(fromISODate(e.target.value)))}
-            className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
-            aria-label="Seleccionar semana"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-0 opacity-0"
+            tabIndex={-1}
+            aria-hidden="true"
           />
-        </label>
+        </div>
 
         <div className="flex items-center gap-0.5">
           <button

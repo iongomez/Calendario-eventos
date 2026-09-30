@@ -46,6 +46,44 @@ export function formatWeekLabel(weekStart: Date): string {
   return `Semana ${String(week).padStart(2, "0")}, ${weekStart.getFullYear()}`;
 }
 
+const MONTH_ABBR = [
+  "ene",
+  "feb",
+  "mar",
+  "abr",
+  "may",
+  "jun",
+  "jul",
+  "ago",
+  "sept",
+  "oct",
+  "nov",
+  "dic",
+];
+
+/**
+ * Date range of the visible week, always naming the month(s) it spans
+ * (e.g. "28 sept – 4 oct 2026") — a bare week number doesn't say what
+ * month you're looking at, especially for a week that crosses months.
+ */
+export function formatWeekRangeLabel(weekStart: Date): string {
+  const weekEnd = addDays(weekStart, 6);
+  const startDay = weekStart.getDate();
+  const endDay = weekEnd.getDate();
+  const startMonth = MONTH_ABBR[weekStart.getMonth()];
+  const endMonth = MONTH_ABBR[weekEnd.getMonth()];
+  const startYear = weekStart.getFullYear();
+  const endYear = weekEnd.getFullYear();
+
+  if (startMonth === endMonth && startYear === endYear) {
+    return `${startDay} – ${endDay} ${endMonth} ${endYear}`;
+  }
+  if (startYear === endYear) {
+    return `${startDay} ${startMonth} – ${endDay} ${endMonth} ${endYear}`;
+  }
+  return `${startDay} ${startMonth} ${startYear} – ${endDay} ${endMonth} ${endYear}`;
+}
+
 export function dayName(date: Date): string {
   const dow = date.getDay();
   return DAY_NAMES[dow === 0 ? 6 : dow - 1];

@@ -31,11 +31,13 @@ export function TopBar({ weekStart, onWeekStartChange, viewMode, onViewModeChang
           type="button"
           onClick={() => setPickerOpen(true)}
           aria-label="Seleccionar semana"
-          className="flex items-center gap-1.5 rounded-full border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+          className="flex w-[365px] shrink-0 items-center gap-1.5 rounded-full border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
         >
-          <CalendarDays size={15} />
-          <span>{formatWeekRangeLabel(weekStart)}</span>
-          <span className="text-xs font-normal text-slate-400">· {formatWeekLabel(weekStart)}</span>
+          <CalendarDays size={15} className="shrink-0" />
+          <span className="truncate whitespace-nowrap">
+            {formatWeekRangeLabel(weekStart)}
+            <span className="font-normal text-slate-400"> · {formatWeekLabel(weekStart)}</span>
+          </span>
         </button>
 
         {pickerOpen && (

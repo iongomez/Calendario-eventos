@@ -78,6 +78,7 @@ export function WeekPickerDrawer({ initialWeekStart, onClose, onSelect }: WeekPi
           </div>
 
           <div className="flex text-center text-xs font-medium text-slate-400">
+            <span className="w-12 shrink-0" />
             {DAY_HEADS.map((d, i) => (
               <span key={i} className="flex-1 py-1.5">
                 {d}
@@ -96,14 +97,14 @@ export function WeekPickerDrawer({ initialWeekStart, onClose, onSelect }: WeekPi
                   key={weekISO}
                   type="button"
                   onClick={() => setStaged(weekStart)}
-                  className={`group relative flex rounded-md ${isStaged ? "bg-slate-200" : "hover:bg-slate-100"}`}
+                  className={`group relative flex items-center rounded-md ${isStaged ? "bg-slate-200" : "hover:bg-slate-100"}`}
                 >
                   <span
-                    className={`pointer-events-none absolute left-1 top-1/2 -translate-y-1/2 rounded bg-slate-700 px-1.5 py-0.5 text-[10px] font-medium text-white opacity-0 transition-opacity ${
-                      isStaged ? "" : "group-hover:opacity-100"
+                    className={`flex w-12 shrink-0 items-center justify-center text-[10px] font-medium text-slate-400 opacity-0 transition-opacity ${
+                      isStaged ? "opacity-100 text-slate-600" : "group-hover:opacity-100"
                     }`}
                   >
-                    Semana {getISOWeekNumber(weekStart)}
+                    Sem. {getISOWeekNumber(weekStart)}
                   </span>
                   {week.map((day) => {
                     const inMonth = isSameMonth(day, viewMonth);

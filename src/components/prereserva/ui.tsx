@@ -1,5 +1,25 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { ArrowLeft, ChevronDown, ChevronRight, Minus, Plus, X } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, Minus, Plus, X } from "lucide-react";
+
+/** Horizontal ruler from the final design; lucide's Ruler is a diagonal one. */
+export function RulerIcon({ size = 15, className }: { size?: number; className?: string }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="M2 12h20" />
+      <path d="M6 8v4M10 8v4M14 8v4M18 8v4" />
+    </svg>
+  );
+}
 
 export function Switch({
   on,
@@ -13,15 +33,17 @@ export function Switch({
   return (
     <button
       type="button"
+      role="switch"
+      aria-checked={on}
       onClick={disabled ? undefined : onToggle}
-      aria-pressed={on}
-      className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${on ? "bg-slate-900" : "bg-slate-300"} ${
-        disabled ? "cursor-not-allowed opacity-50" : ""
+      className={`relative h-[26px] w-11 shrink-0 rounded-full transition-colors ${on ? "bg-[#1A1A1A]" : "bg-[#D7D7D7]"} ${
+        disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"
       }`}
     >
+      {/* Explicit left/top: without them the knob takes the button's centred static position and slides out of the track. */}
       <span
-        className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${
-          on ? "translate-x-5" : "translate-x-0.5"
+        className={`absolute left-[3px] top-[3px] h-5 w-5 rounded-full bg-white shadow-[0_1px_3px_rgba(0,0,0,0.3)] transition-transform ${
+          on ? "translate-x-[18px]" : "translate-x-0"
         }`}
       />
     </button>
@@ -194,23 +216,24 @@ export function StepHeader({
   title?: string;
 }) {
   return (
-    <div className="sticky top-0 z-20 -mx-6 border-b border-slate-100 bg-white px-6 pb-3 pt-1">
+    <div className="sticky top-0 z-20 -mx-6 border-b border-slate-100 bg-white px-6 pb-3 pt-4">
       <div className="flex items-center justify-between">
         <button
           type="button"
           onClick={onBack}
           disabled={!onBack}
-          className="flex h-8 w-8 items-center justify-center rounded-full text-slate-600 hover:bg-slate-100 disabled:opacity-0"
+          aria-label="Volver"
+          className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-900 hover:bg-slate-100 disabled:cursor-default disabled:opacity-25 disabled:hover:bg-transparent"
         >
-          <ArrowLeft size={19} />
+          <ChevronLeft size={22} />
         </button>
         <button
           type="button"
           onClick={onClose}
           aria-label="Cerrar"
-          className="flex h-8 w-8 items-center justify-center rounded-full text-slate-600 hover:bg-slate-100"
+          className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-900 hover:bg-slate-100"
         >
-          <X size={19} />
+          <X size={20} />
         </button>
       </div>
       {step && <p className="mt-1 text-xs text-slate-400">{step}</p>}

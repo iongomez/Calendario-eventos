@@ -74,8 +74,8 @@ function makeEvent(params: {
 }
 
 export const SITES: Site[] = [
-  { id: "san-agustin", name: "San Agustín" },
-  { id: "torre-iberdrola", name: "Torre Iberdrola" },
+  { id: "san-agustin", name: "San Agustín", address: "San Agustín del Guadalix, Madrid" },
+  { id: "torre-iberdrola", name: "Torre Iberdrola", address: "Plaza Euskadi 5, Bilbao" },
 ];
 
 const LAYOUTS_BY_TYPE: Record<string, string[]> = {

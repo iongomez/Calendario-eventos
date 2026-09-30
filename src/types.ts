@@ -8,6 +8,7 @@ export type EventStatus =
 export interface Site {
   id: string;
   name: string;
+  address?: string;
 }
 
 export interface Room {

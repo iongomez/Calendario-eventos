@@ -21,7 +21,7 @@ export function FichaConfigDistribucion() {
 
   return (
     <>
-      <div className="flex-1 overflow-y-auto px-6 pb-6 pt-4">
+      <div className="flex-1 overflow-y-auto px-6 pb-6">
         <StepHeader onBack={back} onClose={close} title="Distribución de la sala" />
         <p className="mb-3.5 mt-4 text-xs text-slate-400">Elige cómo se dispondrá {room.name} para este evento.</p>
         <div className="overflow-hidden rounded-xl border border-slate-200">

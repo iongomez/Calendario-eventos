@@ -42,7 +42,7 @@ export function Step2() {
 
   return (
     <>
-      <div className="flex-1 overflow-y-auto px-6 pb-6 pt-4">
+      <div className="flex-1 overflow-y-auto px-6 pb-6">
         <StepHeader onBack={back} onClose={close} step={`2 de ${totalSteps(state)}`} title="Escoge las fechas del evento" />
 
         <div className="mt-5 rounded-xl border border-slate-200 p-4">
@@ -55,9 +55,9 @@ export function Step2() {
                   stepCalendarMonth: new Date(s.stepCalendarMonth.getFullYear(), s.stepCalendarMonth.getMonth() - 1, 1),
                 }))
               }
-              className="flex h-8 w-8 items-center justify-center rounded-full text-slate-600 hover:bg-slate-100"
+              className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50"
             >
-              <ChevronLeft size={18} />
+              <ChevronLeft size={16} />
             </button>
             <span className="text-sm">{formatMonthYear(state.stepCalendarMonth)}</span>
             <button
@@ -68,9 +68,9 @@ export function Step2() {
                   stepCalendarMonth: new Date(s.stepCalendarMonth.getFullYear(), s.stepCalendarMonth.getMonth() + 1, 1),
                 }))
               }
-              className="flex h-8 w-8 items-center justify-center rounded-full text-slate-600 hover:bg-slate-100"
+              className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50"
             >
-              <ChevronRight size={18} />
+              <ChevronRight size={16} />
             </button>
           </div>
           <div className="grid grid-cols-7 gap-1 text-center">

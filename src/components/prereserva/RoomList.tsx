@@ -1,9 +1,9 @@
-import { Check, Grid2x2, MapPin, Ruler, Search, Star, Users } from "lucide-react";
+import { Check, LayoutGrid, MapPin, Search, Star, Users } from "lucide-react";
 import { EVENTS, ROOMS, SITES } from "../../data/mockData";
 import type { Room } from "../../types";
 import { computeRoomAvailability } from "./flowState";
 import { useFlow } from "./FlowContext";
-import { DarkGreenButton, FooterBar, SecondaryButton, StepHeader } from "./ui";
+import { DarkGreenButton, FooterBar, RulerIcon, SecondaryButton, StepHeader } from "./ui";
 
 function statusLabel(status: ReturnType<typeof computeRoomAvailability>): string {
   if (status === "disponible") return "Disponible";
@@ -45,7 +45,7 @@ export function RoomList() {
 
   return (
     <>
-      <div className="flex-1 overflow-y-auto px-6 pb-6 pt-4">
+      <div className="flex-1 overflow-y-auto px-6 pb-6">
         <StepHeader onClose={close} title="Seleccionar espacios y salas" />
 
         <div className="relative mt-4">
@@ -69,7 +69,7 @@ export function RoomList() {
             <Users size={13} /> {asistentes || "—"}
           </span>
           <span className="flex items-center gap-1.5 rounded-full border border-slate-300 px-3 py-1.5 text-xs text-slate-600">
-            <Grid2x2 size={13} /> {dateLabel}
+            <LayoutGrid size={13} /> {dateLabel}
           </span>
         </div>
 
@@ -98,7 +98,7 @@ export function RoomList() {
                       {room.capacity}
                     </span>
                     <span className={`flex items-center gap-1 ${disponible ? "text-slate-600" : "text-slate-400"}`}>
-                      <Ruler size={13} />
+                      <RulerIcon size={13} />
                       {room.size}m²
                     </span>
                   </div>
@@ -125,7 +125,7 @@ export function RoomList() {
                   type="button"
                   disabled={!disponible}
                   onClick={() => disponible && toggleSala(room)}
-                  className={`flex h-6 w-6 items-center justify-center rounded-[5px] border-[1.5px] ${
+                  className={`flex h-[22px] w-[22px] items-center justify-center rounded-[5px] border-[1.5px] ${
                     selected ? "border-slate-900 bg-slate-900 text-white" : "border-slate-300"
                   } ${!disponible ? "cursor-not-allowed opacity-40" : ""}`}
                 >

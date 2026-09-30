@@ -1,8 +1,8 @@
-import { AlertTriangle, Plus, Settings2, Star, Trash2, Users } from "lucide-react";
+import { AlertTriangle, Plus, Settings, Star, Trash2, Users } from "lucide-react";
 import { ROOMS } from "../../data/mockData";
 import { totalSteps } from "./flowState";
 import { useFlow } from "./FlowContext";
-import { FooterBar, PrimaryButton, StepHeader } from "./ui";
+import { FooterBar, PrimaryButton, RulerIcon, StepHeader } from "./ui";
 
 export function Espacios() {
   const { state, update, nav, back, close } = useFlow();
@@ -25,7 +25,7 @@ export function Espacios() {
 
   return (
     <>
-      <div className="flex-1 overflow-y-auto px-6 pb-6 pt-4">
+      <div className="flex-1 overflow-y-auto px-6 pb-6">
         <StepHeader onBack={back} onClose={close} step={`${stepNum} de ${totalSteps(state)}`} title="Espacios y salas" />
 
         <div className="mt-5 flex items-center justify-between rounded-lg bg-slate-100 px-4 py-2.5">
@@ -61,7 +61,10 @@ export function Espacios() {
                       <Users size={13} />
                       {room.capacity}
                     </span>
-                    <span>{room.size}m²</span>
+                    <span className="flex items-center gap-1">
+                      <RulerIcon size={13} />
+                      {room.size}m²
+                    </span>
                   </div>
                   {state.salaPrincipalId === room.id && (
                     <span className="mt-1.5 inline-block rounded-full border border-slate-900 px-2.5 py-0.5 text-[11px]">
@@ -77,10 +80,10 @@ export function Espacios() {
                   )}
                   <div className="flex items-center gap-3">
                     <button type="button" title="Configurar sala" onClick={() => openFicha(room.id)} className="text-blue-600 hover:text-blue-700">
-                      <Settings2 size={17} />
+                      <Settings size={18} />
                     </button>
                     <button type="button" title="Quitar" onClick={() => removeSala(room.id)} className="text-red-500 hover:text-red-600">
-                      <Trash2 size={17} />
+                      <Trash2 size={18} />
                     </button>
                   </div>
                 </div>

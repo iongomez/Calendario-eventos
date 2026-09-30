@@ -35,7 +35,7 @@ function PersonChipField({
   const showInput = multi || selected.length === 0;
 
   return (
-    <div className="field">
+    <div className="mb-4">
       <FieldLabel>{label}</FieldLabel>
       <div
         ref={ref}
@@ -99,6 +99,7 @@ function PersonChipField({
                     <span className="block text-sm font-semibold text-slate-800">{p.name}</span>
                     <span className="block text-xs text-slate-400">{p.id}</span>
                   </span>
+                  {multi && <span className="h-[22px] w-[22px] shrink-0 rounded-[5px] border-[1.5px] border-slate-300" />}
                 </button>
               ))
             )}
@@ -116,10 +117,10 @@ export function Step1() {
 
   return (
     <>
-      <div className="flex-1 overflow-y-auto px-6 pb-6 pt-4">
+      <div className="flex-1 overflow-y-auto px-6 pb-6">
         <StepHeader onClose={close} step={`1 de ${totalSteps(state)}`} title="Completa los datos básicos" />
 
-        <div className="field mt-5">
+        <div className="mb-4 mt-5">
           <Dropdown
             value={isPrereserva ? "Pre-reserva" : "Nuevo evento"}
             placeholder="Selecciona"
@@ -134,9 +135,9 @@ export function Step1() {
           />
         </div>
 
-        <SectionTitle tight>Definición del evento</SectionTitle>
+        <SectionTitle>Definición del evento</SectionTitle>
 
-        <div className="field mb-4">
+        <div className="mb-4">
           <FieldLabel>Nombre del evento</FieldLabel>
           <TextInput
             placeholder="Nombre del evento"
@@ -166,7 +167,7 @@ export function Step1() {
         </label>
 
         {!state.visualizarMismo && (
-          <div className="field mb-4">
+          <div className="mb-4">
             <FieldLabel>Nombre para la señalética</FieldLabel>
             <TextInput
               placeholder="Nombre para la señalética"
@@ -179,7 +180,7 @@ export function Step1() {
           </div>
         )}
 
-        <div className="field mb-4">
+        <div className="mb-4">
           <FieldLabel>Lugar del evento</FieldLabel>
           <Dropdown
             value={site?.name ?? ""}
@@ -192,7 +193,7 @@ export function Step1() {
           />
         </div>
 
-        <div className="field mb-4">
+        <div className="mb-4">
           <FieldLabel>Tipo de evento</FieldLabel>
           <Dropdown
             value={state.tipo}
@@ -203,7 +204,7 @@ export function Step1() {
         </div>
 
         {state.tipo === "Formativo" && (
-          <div className="field mb-4">
+          <div className="mb-4">
             <FieldLabel>ID del evento formativo</FieldLabel>
             <TextInput
               placeholder="FORM00"
@@ -217,7 +218,7 @@ export function Step1() {
         )}
 
         <SectionTitle>Asistencia al evento</SectionTitle>
-        <div className="field mb-4">
+        <div className="mb-4">
           <FieldLabel>Asistentes estimados</FieldLabel>
           <TextInput
             type="number"
@@ -263,7 +264,7 @@ export function Step1() {
           noBorder={state.comentarios}
         />
         {state.comentarios && (
-          <div className="field mt-2">
+          <div className="mt-2">
             <Textarea
               placeholder="Escribe aquí cualquier comentario adicional sobre el evento..."
               value={state.comentariosTexto}

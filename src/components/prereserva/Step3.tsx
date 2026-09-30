@@ -22,7 +22,7 @@ export function Step3() {
 
   return (
     <>
-      <div className="flex-1 overflow-y-auto px-6 pb-6 pt-4">
+      <div className="flex-1 overflow-y-auto px-6 pb-6">
         <StepHeader onBack={back} onClose={close} step={`3 de ${totalSteps(state)}`} title="¿Qué más quieres completar ahora?" />
 
         <p className="mt-4 mb-3 text-xs text-slate-400">

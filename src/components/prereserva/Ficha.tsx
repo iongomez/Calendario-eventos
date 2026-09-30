@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { Building2, Check, Grid2x2, Info, Ruler, Star, Users } from "lucide-react";
-import { EVENTS, ROOMS } from "../../data/mockData";
+import { Building, Check, ChevronLeft, ChevronRight, Info, LayoutGrid, MapPin, Star, Users } from "lucide-react";
+import { EVENTS, ROOMS, SITES } from "../../data/mockData";
 import { formatMonthYear, getMonthWeeks, isSameMonth, toISODate } from "../../utils/dateUtils";
 import { activeDayCount, computeRoomAvailability, getRoomConfig, roomDayKind, usageDayRange } from "./flowState";
 import { useFlow } from "./FlowContext";
-import { ConfigRow, FooterBar, PrimaryButton, SecondaryButton, StepHeader, ToggleRow } from "./ui";
+import { ConfigRow, FooterBar, PrimaryButton, RulerIcon, SecondaryButton, StepHeader, Switch, ToggleRow } from "./ui";
+
+const HALF_DAY_STRIPES = "[background-image:repeating-linear-gradient(135deg,#e2e8f0,#e2e8f0_2px,#fff_2px,#fff_4px)]";
 
 const DOW = ["L", "M", "X", "J", "V", "S", "D"];
 
@@ -40,7 +42,7 @@ export function Ficha() {
 
   return (
     <>
-      <div className="flex-1 overflow-y-auto px-6 pb-6 pt-4">
+      <div className="flex-1 overflow-y-auto px-6 pb-6">
         <StepHeader onBack={back} onClose={close} title={room.name} />
 
         <div className="mt-5 flex justify-between rounded-xl bg-slate-100 p-4">
@@ -134,6 +136,7 @@ function FichaDetalle({
   const [dispExpanded, setDispExpanded] = useState(false);
   const [accesoriosExpanded, setAccesoriosExpanded] = useState(false);
   const weeks = getMonthWeeks(calendarMonth);
+  const site = SITES.find((s) => s.id === room.siteId);
 
   return (
     <div className="pt-4">
@@ -143,9 +146,10 @@ function FichaDetalle({
           <Star size={12} fill="currentColor" /> Sala singular
         </span>
       )}
-      <InfoRow icon={<Building2 size={15} />}>{room.building}</InfoRow>
-      <InfoRow icon={<Grid2x2 size={15} />}>Tipo: {room.type}</InfoRow>
-      <InfoRow icon={<Ruler size={15} />}>Tamaño: {room.size}m²</InfoRow>
+      {site?.address && <InfoRow icon={<MapPin size={15} />}>{site.address}</InfoRow>}
+      <InfoRow icon={<Building size={15} />}>{room.building}</InfoRow>
+      <InfoRow icon={<LayoutGrid size={15} />}>Tipo: {room.type}</InfoRow>
+      <InfoRow icon={<RulerIcon size={15} />}>Tamaño: {room.size}m²</InfoRow>
       <InfoRow icon={<Users size={15} />}>Aforo (pax.): {room.capacity}</InfoRow>
 
       <h2 className="mb-2.5 mt-6 text-base font-bold text-slate-900">Disponibilidad de la sala</h2>
@@ -172,17 +176,19 @@ function FichaDetalle({
               <button
                 type="button"
                 onClick={() => setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() - 1, 1))}
-                className="text-slate-600"
+                aria-label="Mes anterior"
+                className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50"
               >
-                ‹
+                <ChevronLeft size={16} />
               </button>
               <span className="text-sm">{formatMonthYear(calendarMonth)}</span>
               <button
                 type="button"
                 onClick={() => setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 1))}
-                className="text-slate-600"
+                aria-label="Mes siguiente"
+                className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50"
               >
-                ›
+                <ChevronRight size={16} />
               </button>
             </div>
             <div className="grid grid-cols-7 gap-1 text-center">
@@ -212,7 +218,7 @@ function FichaDetalle({
             <Legend color="bg-slate-900" label="Evento actual" />
             <Legend color="bg-blue-200" label="Montaje / desmontaje" />
             <Legend color="bg-slate-200" label="Otros eventos" />
-            <Legend color="bg-slate-100" label="Montaje/Desmontaje medio día" />
+            <Legend color={`bg-slate-200 ${HALF_DAY_STRIPES}`} label="Montaje/Desmontaje medio día" />
           </div>
           <button type="button" onClick={() => setDispExpanded(false)} className="mb-1 text-sm font-medium text-blue-600 hover:underline">
             Ocultar disponibilidad
@@ -289,17 +295,10 @@ function FichaConfig({ room }: { room: NonNullable<ReturnType<typeof ROOMS.find>
       <ConfigRow label="Accesorios de la sala" hint={`${cfg.accesorios.length} accesorios`} onClick={() => nav("ficha-config-accesorios")} />
       <div className="flex items-center justify-between gap-3 border-b border-slate-100 py-3.5">
         <p className="text-sm font-semibold text-slate-800">Es la sala principal</p>
-        <button
-          type="button"
-          onClick={() => update((s) => ({ ...s, salaPrincipalId: s.salaPrincipalId === room.id ? null : room.id, fichaConfigDirty: true }))}
-          className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${esPrincipal ? "bg-slate-900" : "bg-slate-300"}`}
-        >
-          <span
-            className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${
-              esPrincipal ? "translate-x-5" : "translate-x-0.5"
-            }`}
-          />
-        </button>
+        <Switch
+          on={esPrincipal}
+          onToggle={() => update((s) => ({ ...s, salaPrincipalId: s.salaPrincipalId === room.id ? null : room.id, fichaConfigDirty: true }))}
+        />
       </div>
       <ToggleRow
         label="Observaciones"
@@ -317,14 +316,15 @@ function FichaConfig({ room }: { room: NonNullable<ReturnType<typeof ROOMS.find>
         <div className="mt-2">
           <textarea
             placeholder="Observaciones sobre esta sala..."
-            defaultValue={cfg.observaciones}
-            onBlur={(e) =>
+            value={cfg.observaciones}
+            onChange={(e) => {
+              const value = e.target.value;
               update((s) => ({
                 ...s,
-                roomConfig: { ...s.roomConfig, [room.id]: { ...cfg, observaciones: e.target.value } },
+                roomConfig: { ...s.roomConfig, [room.id]: { ...getRoomConfig(s, room), observaciones: value } },
                 fichaConfigDirty: true,
-              }))
-            }
+              }));
+            }}
             className="min-h-[90px] w-full resize-y rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-slate-500"
           />
         </div>

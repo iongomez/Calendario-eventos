@@ -4,7 +4,7 @@ import { dayName, fromISODate } from "../../utils/dateUtils";
 import { ensureHorario, usageDayRange } from "./flowState";
 import { useFlow } from "./FlowContext";
 import type { DiaHorario } from "./flowTypes";
-import { FooterBar, SecondaryButton, StepHeader } from "./ui";
+import { FooterBar, SecondaryButton, StepHeader, Switch } from "./ui";
 import { useEffect } from "react";
 
 export function FichaConfigFechas() {
@@ -23,7 +23,7 @@ export function FichaConfigFechas() {
   if (days.length === 0) {
     return (
       <>
-        <div className="flex-1 overflow-y-auto px-6 pb-6 pt-4">
+        <div className="flex-1 overflow-y-auto px-6 pb-6">
           <StepHeader onBack={back} onClose={close} title="Fechas y horas de uso" />
           <div className="mt-4 rounded-xl bg-slate-100 px-5 py-9 text-center">
             <AlertTriangle size={26} className="mx-auto mb-3 text-slate-400" />
@@ -41,10 +41,13 @@ export function FichaConfigFechas() {
     );
   }
 
-  const horario = state.roomConfig[room.id]?.horario ?? {};
+  // Derive the schedule during render: the effect above only persists it after the first paint,
+  // so reading state.roomConfig directly would hand DayCard an undefined day and crash.
+  const horario = ensureHorario(state, room).roomConfig[room.id].horario;
 
   function patchDia(date: string, patch: Partial<DiaHorario>) {
-    update((s) => {
+    update((prev) => {
+      const s = ensureHorario(prev, room!);
       const cfg = s.roomConfig[room!.id];
       const dia = { ...cfg.horario[date], ...patch };
       return {
@@ -57,11 +60,17 @@ export function FichaConfigFechas() {
 
   return (
     <>
-      <div className="flex-1 overflow-y-auto px-6 pb-6 pt-4">
+      <div className="flex-1 overflow-y-auto px-6 pb-6">
         <StepHeader onBack={back} onClose={close} title="Fechas y horas de uso de la sala" />
         <div className="mt-4 flex flex-col gap-3">
           {days.map((date) => (
-            <DayCard key={date} date={date} dia={horario[date]} onPatch={(patch) => patchDia(date, patch)} />
+            <DayCard
+              key={date}
+              date={date}
+              dia={horario[date]}
+              esDesmontaje={date > (state.fechaFin || state.fechaInicio!)}
+              onPatch={(patch) => patchDia(date, patch)}
+            />
           ))}
         </div>
       </div>
@@ -72,11 +81,26 @@ export function FichaConfigFechas() {
   );
 }
 
-function DayCard({ date, dia, onPatch }: { date: string; dia: DiaHorario; onPatch: (patch: Partial<DiaHorario>) => void }) {
+function DayCard({
+  date,
+  dia,
+  esDesmontaje,
+  onPatch,
+}: {
+  date: string;
+  dia: DiaHorario;
+  esDesmontaje: boolean;
+  onPatch: (patch: Partial<DiaHorario>) => void;
+}) {
   const d = fromISODate(date);
   const label = `${dayName(d)[0]}${dayName(d).slice(1).toLowerCase()} - ${d.getDate()} de ${d.toLocaleDateString("es-ES", { month: "long" })}`;
 
   function addExtra() {
+    if (esDesmontaje) {
+      // After the event the room stays in use in the morning and the teardown takes the afternoon.
+      onPatch({ inicio: "08:00", fin: "14:00", extra: [{ inicio: "14:00", fin: "20:00" }] });
+      return;
+    }
     const [h, m] = dia.fin.split(":").map(Number);
     const [h0, m0] = dia.inicio.split(":").map(Number);
     const startMin = h0 * 60 + m0;
@@ -94,13 +118,7 @@ function DayCard({ date, dia, onPatch }: { date: string; dia: DiaHorario; onPatc
     <div className="rounded-xl border border-slate-200 p-3.5">
       <div className="mb-3.5 flex items-center justify-between text-sm font-bold text-slate-900">
         <span>{label}</span>
-        <button
-          type="button"
-          onClick={() => onPatch({ activo: !dia.activo })}
-          className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${dia.activo ? "bg-slate-900" : "bg-slate-300"}`}
-        >
-          <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${dia.activo ? "translate-x-5" : "translate-x-0.5"}`} />
-        </button>
+        <Switch on={dia.activo} onToggle={() => onPatch({ activo: !dia.activo })} />
       </div>
 
       {dia.activo && (

@@ -4,7 +4,7 @@ import type { Room } from "../../types";
 import { fromISODate } from "../../utils/dateUtils";
 import { computeRoomAvailability, hasSelectedRoomConflicts, roomConflicts } from "./flowState";
 import { useFlow } from "./FlowContext";
-import { ConflictWarning, DarkGreenButton, FooterBar, RulerIcon, SecondaryButton, StepHeader } from "./ui";
+import { ConflictWarning, DarkGreenButton, FooterBar, SecondaryButton, StepHeader } from "./ui";
 
 function statusLabel(status: ReturnType<typeof computeRoomAvailability>): string {
   if (status === "disponible") return "Disponible";
@@ -100,8 +100,8 @@ export function RoomList() {
                       {room.capacity}
                     </span>
                     <span className={`flex items-center gap-1 ${disponible ? "text-slate-600" : "text-slate-400"}`}>
-                      <RulerIcon size={13} />
-                      {room.size}m²
+                      <MapPin size={13} />
+                      {SITES.find((st) => st.id === room.siteId)?.name}
                     </span>
                   </div>
                 </div>

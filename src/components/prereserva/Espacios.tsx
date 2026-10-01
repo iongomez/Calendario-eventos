@@ -1,8 +1,8 @@
-import { AlertTriangle, Plus, Settings, Star, Trash2, Users } from "lucide-react";
-import { EVENTS, ROOMS } from "../../data/mockData";
+import { AlertTriangle, MapPin, Plus, Settings, Star, Trash2, Users } from "lucide-react";
+import { EVENTS, ROOMS, SITES } from "../../data/mockData";
 import { hasSelectedRoomConflicts, roomConflicts, totalSteps } from "./flowState";
 import { useFlow } from "./FlowContext";
-import { ConflictWarning, FooterBar, PrimaryButton, RulerIcon, StepHeader } from "./ui";
+import { ConflictWarning, FooterBar, PrimaryButton, StepHeader } from "./ui";
 
 export function Espacios() {
   const { state, update, nav, back, close } = useFlow();
@@ -62,8 +62,8 @@ export function Espacios() {
                       {room.capacity}
                     </span>
                     <span className="flex items-center gap-1">
-                      <RulerIcon size={13} />
-                      {room.size}m²
+                      <MapPin size={13} />
+                      {SITES.find((st) => st.id === room.siteId)?.name}
                     </span>
                   </div>
                   {state.salaPrincipalId === room.id && (

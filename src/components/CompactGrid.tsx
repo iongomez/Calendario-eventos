@@ -1,6 +1,7 @@
-import type { CalendarEvent, DailyCatering, Room } from "../types";
-import { STATUS_STYLES } from "../utils/statusStyles";
-import { dayName, formatDayNumber, isToday, toISODate } from "../utils/dateUtils";
+import type { CalendarEvent, Room } from "../types";
+import { layoutRoomRow } from "../utils/eventLayout";
+import { CompactEventBar } from "./CompactEventBar";
+import { dayName, formatDayNumber, fromISODate, isToday, toISODate } from "../utils/dateUtils";
 import { Star } from "lucide-react";
 
 interface CompactGridProps {
@@ -12,23 +13,11 @@ interface CompactGridProps {
   onCreateEvent: (roomId: string, date: string) => void;
 }
 
-function findDayEntry(
-  events: CalendarEvent[],
-  iso: string,
-): { event: CalendarEvent; day: DailyCatering } | null {
-  for (const event of events) {
-    if (iso < event.startDate || iso > event.endDate) continue;
-    const day = event.days.find((d) => d.date === iso);
-    if (day) return { event, day };
-  }
-  return null;
-}
-
 /**
  * Compact "at a glance" grid: every room as a thin row so many rooms fit on
- * screen at once, with a small coloured square per day instead of a full
- * event card — for scanning which room is free on a given date, not for
- * reading event detail (that's what the regular calendar view is for).
+ * screen at once, with a continuous bar per multi-day event (same layout as
+ * the full calendar view) instead of one dot per day — for scanning which
+ * room is free on a given date without losing the event's name at a glance.
  */
 export function CompactGrid({ weekDays, rooms, eventsByRoom, onOpenEvent, onOpenRoom, onCreateEvent }: CompactGridProps) {
   const weekISOs = weekDays.map(toISODate);
@@ -68,47 +57,37 @@ export function CompactGrid({ weekDays, rooms, eventsByRoom, onOpenEvent, onOpen
       ) : (
         rooms.map((room) => {
           const events = eventsByRoom.get(room.id) ?? [];
+          const cells = layoutRoomRow(events, weekDays);
           return (
             <div key={room.id} className={`flex border-b border-slate-100 ${!room.reservable ? "opacity-50" : ""}`}>
               <button
                 type="button"
                 onClick={() => onOpenRoom(room)}
-                className="flex w-48 shrink-0 items-center gap-1 border-r border-slate-200 px-3 py-1.5 text-left text-xs font-medium text-slate-700 hover:bg-slate-50"
+                className="flex h-10 w-48 shrink-0 items-center gap-1 border-r border-slate-200 px-3 text-left text-xs font-medium text-slate-700 hover:bg-slate-50"
               >
                 <span className="truncate">
                   {room.code} · {room.name}
                 </span>
                 {room.singular && <Star size={11} className="shrink-0 fill-amber-400 text-amber-400" />}
               </button>
-              <div className="grid flex-1" style={{ gridTemplateColumns: "repeat(7, minmax(0,1fr))" }}>
-                {weekISOs.map((iso, i) => {
-                  const found = findDayEntry(events, iso);
-                  const today = isToday(weekDays[i]);
-                  const canCreate = !found && room.reservable;
-                  return (
+              <div className="relative grid h-10 flex-1" style={{ gridTemplateColumns: "repeat(7, minmax(0,1fr))" }}>
+                {cells.map((cell) =>
+                  cell.type === "event" ? (
+                    <CompactEventBar key={cell.key} cell={cell} onOpen={onOpenEvent} />
+                  ) : (
                     <button
-                      key={iso}
+                      key={cell.key}
                       type="button"
-                      onClick={() => {
-                        if (found) onOpenEvent(found.event);
-                        else if (canCreate) onCreateEvent(room.id, iso);
-                      }}
-                      disabled={!found && !canCreate}
-                      title={found ? `${found.event.name} — ${found.event.promoter}` : "Sala libre"}
-                      className={`flex h-8 items-center justify-center border-r border-slate-100 last:border-r-0 ${
-                        today ? "bg-emerald-50/60" : ""
-                      } ${canCreate ? "hover:bg-slate-100" : ""}`}
-                    >
-                      {found && (
-                        <span
-                          className={`h-3 w-3 rounded-[3px] ${STATUS_STYLES[found.event.status].dot} ${
-                            found.day.isSetup ? "opacity-45" : ""
-                          }`}
-                        />
-                      )}
-                    </button>
-                  );
-                })}
+                      style={{ gridColumn: `${cell.colStart} / span 1`, gridRow: "1" }}
+                      onClick={() => room.reservable && onCreateEvent(room.id, cell.date)}
+                      disabled={!room.reservable}
+                      title="Sala libre"
+                      className={`flex h-full items-center justify-center border-r border-slate-100 last:border-r-0 ${
+                        isToday(fromISODate(cell.date)) ? "bg-emerald-50/60" : ""
+                      } ${room.reservable ? "hover:bg-slate-100" : ""}`}
+                    />
+                  ),
+                )}
               </div>
             </div>
           );
